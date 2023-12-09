@@ -1,5 +1,4 @@
 import { getFileURL } from "@/lib/pb/client";
-
 import { useMutation, useQueryClient } from "rakkasjs";
 import { usePageContext } from "rakkasjs";
 import usericon from "./user-icon.svg";
@@ -31,7 +30,7 @@ export function useUser() {
     },
     {
       onSuccess: () => {
-        qc.invalidateQueries("utility_staff");
+        qc.invalidateQueries("pocketbook_user");
         window?.location && window?.location.reload();
       },
     },
@@ -41,7 +40,7 @@ export function useUser() {
 
   const user_avatar = user?.avatar
     ? getFileURL({
-        collection_id_or_name: "utility_staff",
+        collection_id_or_name: "pocketbook_user",
         file_name: user.avatar,
         record_id: user.id,
       })

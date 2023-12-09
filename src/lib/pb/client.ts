@@ -4,13 +4,14 @@ import { TypedPocketBase } from "typed-pocketbase";
 import { Schema,UtilityStaffCreate } from "./db-types";
 import { tryCatchWrapper } from "@/utils/helpers/async";
 import { RequestContext } from "rakkasjs";
-import { pb_url } from "../env";
+import { RAKKAS_PB_URL } from "../env";
+
 
 
 export type PocketBaseClient = TypedPocketBase<Schema>;
 
 
-export const pb = new PocketBase(pb_url) as TypedPocketBase<Schema>;
+export const pb = new PocketBase(RAKKAS_PB_URL) as TypedPocketBase<Schema>;
 
 
 export async function createUser(data: UtilityStaffCreate) {
@@ -79,7 +80,7 @@ export function getFileURL({
     return "";
   }
   // http://127.0.0.1:8090/api/files/COLLECTION_ID_OR_NAME/RECORD_ID/FILENAME?thumb=100x300
-  return `${pb_url}/api/files/${collection_id_or_name}/${record_id}/${file_name}`;
+  return `${RAKKAS_PB_URL}/api/files/${collection_id_or_name}/${record_id}/${file_name}`;
 }
 
 export async function serverSidePocketBaseInstance(
@@ -88,7 +89,7 @@ export async function serverSidePocketBaseInstance(
   try {
     const pb_cookie = ctx.request.headers.get("cookie") ?? "";
     const pb = new PocketBase(
-      import.meta.env.RAKKAS_PB_URL,
+      RAKKAS_PB_URL,
     ) as PocketBaseClient;
     pb.authStore.loadFromCookie(pb_cookie);
     return pb;

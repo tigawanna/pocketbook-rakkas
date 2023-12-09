@@ -34,7 +34,7 @@ export function SignInForm({}: SignInFormProps) {
     },
     onSuccess(data) {
       if (data && data?.data) {
-        qc.invalidateQueries({ queryKey: ["utility_staff"] });
+        qc.invalidateQueries({ queryKey: ["pocketbook_user"] });
         toast("Welcome back " + data?.data?.record?.username, {
           type: "success",
         });
@@ -50,7 +50,7 @@ export function SignInForm({}: SignInFormProps) {
     mutationFn: (vars: { email: string }) => {
       return tryCatchWrapper(
         page_ctx.locals.pb
-          ?.collection("utility_staff")
+          ?.collection("pocketbook_user")
           .requestPasswordReset(vars.email),
       );
     },

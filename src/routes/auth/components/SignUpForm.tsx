@@ -1,7 +1,6 @@
 import { Button } from "@/components/shadcn/ui/button";
 import { OAuthproviders } from "./OAuthProviders";
 import { Link, navigate, usePageContext } from "rakkasjs";
-import { TheTextInput } from "@/components/form/inputs/TheTextInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormHook } from "@/components/form/useForm";
 import { useState } from "react";
@@ -38,7 +37,7 @@ export function SignUpForm({}: SignupFormProps) {
     mutationFn: (vars: typeof input) => {
       return tryCatchWrapper(
         // @ts-expect-error
-        page_ctx.locals.pb?.collection("utility_staff").create(input),
+        page_ctx.locals.pb?.collection("pocketbook_user").create(input),
       );
     },
     onError(error: any) {
@@ -46,7 +45,7 @@ export function SignUpForm({}: SignupFormProps) {
     },
     onSuccess(data) {
       if (data && data?.data) {
-        qc.invalidateQueries({ queryKey: ["utility_staff"] });
+        qc.invalidateQueries({ queryKey: ["pocketbook_user"] });
         toast("Welcome" + data?.data?.username, {
           type: "success",
         });

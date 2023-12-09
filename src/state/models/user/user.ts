@@ -5,7 +5,7 @@ import {
   PBUserRecord,
   TUserSignUpFormFields,
 } from "./types";
-import { PB_AUTH_COLLECTION } from "@/lib/env";
+import { RAKKAS_PB_AUTH_COLLECTION } from "@/lib/env";
 
 
 
@@ -27,7 +27,7 @@ interface ILoginUser {
 export async function loginUser({ pb,user, password }: ILoginUser) {
   try {
     const authData = await pb
-      .collection(PB_AUTH_COLLECTION)
+      .collection(RAKKAS_PB_AUTH_COLLECTION)
       .authWithPassword<PBUserRecord>(user, password);
     // pb.authStore.exportToCookie({ httpOnly: false });
     return authData;
@@ -44,7 +44,7 @@ interface IOuthLogin {
 export async function triggerOuathLogin({ pb,provider }: IOuthLogin) {
   try {
     const authData = await pb
-      .collection(PB_AUTH_COLLECTION)
+      .collection(RAKKAS_PB_AUTH_COLLECTION)
       .authWithOAuth2<GithubOauthResponse>({ provider });
     pb.authStore.exportToCookie({ httpOnly: false });
     // console.log("authdata from github  == ",authData);
@@ -65,7 +65,7 @@ export async function updateUser(pb: PocketBaseClient,authData: GithubOauthRespo
       emailVisibility: true,
     };
     const new_dev = await pb
-      .collection(PB_AUTH_COLLECTION)
+      .collection(RAKKAS_PB_AUTH_COLLECTION)
       .update(dev.id, data);
 
     // console.log("new dev === ", new_dev);
@@ -95,7 +95,7 @@ export interface ISignupuser {
 
 export async function createUser({ pb,user }: ISignupuser) {
   try {
-    await pb.collection(PB_AUTH_COLLECTION).create(user);
+    await pb.collection(RAKKAS_PB_AUTH_COLLECTION).create(user);
     const logged_in_user = await loginUser({
       pb,
       user: user.email,

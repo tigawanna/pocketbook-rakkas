@@ -18,7 +18,7 @@ export function OAuthproviders({}: OAuthprovidersProps) {
         toast("Welcome" + data?.data?.username, {
           type: "success",
         });
-        qc.invalidateQueries({ queryKey: ["utility_staff"] });
+        qc.invalidateQueries({ queryKey: ["pocketbook_user"] });
         navigate("/dashboard");
       }
       if (data.error) {

@@ -57,8 +57,8 @@ Layout.preload = (ctx: PageContext) => {
   return {
     head: {
       title: "Pocketbook",
-      keywords: "bills, property managent,tenancy,monthly,billing,invoice",
-      description: "intergrated property management app  ",
+      keywords: "frriends, meeting,groups,likes,social,pocketbook,pocketbase",
+      description: " pocketbook your thoughts  ",
     },
   };
 };
