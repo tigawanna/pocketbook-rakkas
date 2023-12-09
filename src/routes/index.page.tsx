@@ -15,7 +15,7 @@ export default function HomePage({}: PageProps) {
   ];
   const {user} = useUser()
   return (
-    <main className="flex flex-col items-center justify-center w-full max-h-screen overflow-scroll h-full gap-3">
+    <main className="flex flex-col items-center justify-center w-full max-h-screen overflow-y-scroll h-full gap-3">
       {/* <Icons.lost className="w-[30%] h-[30%] fill-primary" />
         <Icons.gopher /> */}
       {/* <div className="flex flex-wrap sm:items-center justify-center w-full h-full gap-3">

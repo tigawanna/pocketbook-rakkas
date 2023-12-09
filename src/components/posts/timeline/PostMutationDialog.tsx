@@ -11,7 +11,7 @@ import {  OneCustomPostType } from "@/state/models/posts/types";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PostMutattionForm } from "../mutation/PostForm";
 import { Link } from "rakkasjs";
-import { Button } from "@/components/shadcn/ui/button";
+
 
 interface PostMutationDialogProps {
   label?: string;
@@ -40,14 +40,16 @@ export function PostMutationDialog({
         className="h-fit w-full border-none  bg-base-300 "
       >
         {user ? (
-          <PostMutattionForm
-            depth={depth}
-            parent={parent}
-            label={label}
-            custom_post={custom_post}
-            user={user}
-            setOpen={setOpen}
-          />
+          <div className="">
+            <PostMutattionForm
+              depth={depth}
+              parent={parent}
+              label={label}
+              custom_post={custom_post}
+              user={user}
+              setOpen={setOpen}
+            />
+          </div>
         ) : (
           <div className="h-full w-full flex flex-col items-center justify-center gap-5 ">
             <div className="text-center font-bold text-2xl border-b ">
