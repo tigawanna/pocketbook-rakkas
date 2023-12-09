@@ -13,9 +13,11 @@ import {
   createNewPost,
   updatePost,
 } from "@/state/models/posts/posts";
-import { CustomPostType } from "@/state/models/posts/types";
+import {  OneCustomPostType } from "@/state/models/posts/types";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
+import { useMutationWrapper } from "@/state/hooks/useMutation";
+import { usePageContext } from "rakkasjs";
 
 interface PostMutattionFormProps {
   user: PocketbookUserResponse;
@@ -23,7 +25,7 @@ interface PostMutattionFormProps {
   setOpen: React.Dispatch<SetStateAction<boolean | undefined>>;
   depth?: number;
   parent?: string;
-  custom_post?: CustomPostType;
+  custom_post?: OneCustomPostType;
 }
 
 export function PostMutattionForm({
@@ -58,7 +60,8 @@ export function PostMutattionForm({
     refresh: true,
     success_message: "Post updated successfully",
   });
-
+  const page_ctx = usePageContext();
+  const pb = page_ctx.locals.pb;
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formdata = new FormData();
@@ -78,7 +81,7 @@ export function PostMutattionForm({
 
     if (custom_post && custom_post.post_id) {
       update_mutation.mutate(
-        { id: custom_post.post_id as string, data: formdata },
+        { pb,id: custom_post.post_id as string, data: formdata as any },
         {
           onSuccess(data, variables, context) {
             setOpen(false);
@@ -87,7 +90,7 @@ export function PostMutattionForm({
       );
     } else {
       mutation.mutate(
-        { data: formdata },
+        { pb,data: formdata as any },
         {
           onSuccess(data, variables, context) {
             setOpen(false);
@@ -107,15 +110,15 @@ export function PostMutattionForm({
       {error.message !== "" && <ErrorOutput error={error} />}
       <form
         onSubmit={handleSubmit}
-        className="w-full  h-fit min-h-[40%] border-2 shadow-xl rounded-xl p-3 gap-3 m-5  
-            flex flex-col items-center justify-start bg-base-300 overflow-y-scroll scroll-bar"
+        className="w-full  h-fit min-h-[40%] shadow-xl rounded-xl  gap-3 
+            flex flex-col items-center justify-start  "
       >
-        <div className="w-full flex justify-end rounded-sm">
+        {/* <div className="w-full flex justify-end rounded-sm">
           <Close>
             <X className="h-5 w-5 focus:text-accent-foreground" />
             <span className="sr-only">Close</span>
           </Close>
-        </div>
+        </div> */}
 
         {/* location */}
         {/* property location */}

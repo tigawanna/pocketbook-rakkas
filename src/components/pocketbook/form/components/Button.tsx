@@ -14,7 +14,8 @@ interface AsyncButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 export const AsyncButton = forwardRef<HTMLButtonElement, AsyncButtonProps>(
   ({ className, isLoading, label, disabled, node, ...props }, ref) => {
     const base_style = twMerge(
-      "p-2 w-full flex items-center justify-center rounded border hover:border-accent-foreground hover:text-accent-foreground",
+      `p-2 w-full flex items-center justify-center rounded border border-accent 
+      hover:bg-base-200`,
       className,
     );
     // console.log("is loading in button === ",isLoading)

@@ -83,7 +83,7 @@ export const PostsCard = ({
               // push(`/profile/${item?.creator_id}`);
             }}
             className="w-fit px-1 flex justify-start items-center gap-[1px]
-                 cursor-pointer hover:bg-base-300-foreground rounded-full"
+                 cursor-pointer hover:bg-base-300 rounded-full"
           >
             <div className=" h-8 w-8 md:w-10 md:h-10 ">
               {item?.creator_image ? (

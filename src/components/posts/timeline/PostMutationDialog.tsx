@@ -7,8 +7,11 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/shadcn/ui/dialog";
-import { CustomPostType } from "@/state/models/posts/types";
+import {  OneCustomPostType } from "@/state/models/posts/types";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
+import { PostMutattionForm } from "../mutation/PostForm";
+import { Link } from "rakkasjs";
+import { Button } from "@/components/shadcn/ui/button";
 
 interface PostMutationDialogProps {
   label?: string;
@@ -16,7 +19,7 @@ interface PostMutationDialogProps {
   depth?: number;
   parent?: string;
   user?: PocketbookUserResponse;
-  custom_post?: CustomPostType;
+  custom_post?: OneCustomPostType;
 }
 
 export function PostMutationDialog({
@@ -34,9 +37,9 @@ export function PostMutationDialog({
 
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        className="h-fit w-full border-none"
+        className="h-fit w-full border-none  bg-base-300 "
       >
-        {/* {user ? (
+        {user ? (
           <PostMutattionForm
             depth={depth}
             parent={parent}
@@ -61,11 +64,11 @@ export function PostMutationDialog({
               </Close>
             </Link>
           </div>
-        )} */}
-        {/* </ScrollArea> */}
-        <DialogFooter>
-          {/* <Button type="submit">Save changes</Button> */}
-        </DialogFooter>
+        )}
+
+        {/* <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

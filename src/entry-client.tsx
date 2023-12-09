@@ -5,14 +5,14 @@ import { TypedPocketBase } from "typed-pocketbase";
 import PocketBase from "pocketbase";
 import { Schema } from "./lib/pb/db-types";
 
-const queryClient = new QueryClient({
+
+
+const queryClient:QueryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: async (data, variable, context, mutation) => {
       if (Array.isArray(mutation.meta?.invalidates)) {
-        mutation.meta?.invalidates.forEach((key) => {
-          return queryClient.invalidateQueries({
-            queryKey: key,
-          });
+        return queryClient.invalidateQueries({
+          queryKey: mutation.meta?.invalidates,
         });
       }
     },

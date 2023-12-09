@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ImagePlus } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface ImageInputProps {
@@ -34,7 +33,7 @@ export function ImageInput({ image, alt_image, updateImage }: ImageInputProps) {
   return (
     <div className="w-full flex flex-col items-center justify-center ">
       {preview && preview !== "" && (
-        <Image
+        <img
           src={preview}
           alt="preview"
           height={250}
