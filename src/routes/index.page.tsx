@@ -1,4 +1,6 @@
 import { Icons } from "@/components/icons/Iconts";
+import { Timeline } from "@/components/posts/timeline/Timeline";
+import { useUser } from "@/lib/rakkas/hooks/useUser";
 import { LayoutDashboard, Receipt, Store, Users2Icon } from "lucide-react";
 import { Link, PageProps } from "rakkasjs";
 
@@ -11,11 +13,12 @@ export default function HomePage({}: PageProps) {
     },
 
   ];
+  const {user} = useUser()
   return (
-    <main className="flex flex-col items-center justify-center w-full min-h-screen h-full gap-3">
+    <main className="flex flex-col items-center justify-center w-full max-h-screen overflow-scroll h-full gap-3">
       {/* <Icons.lost className="w-[30%] h-[30%] fill-primary" />
         <Icons.gopher /> */}
-      <div className="flex flex-wrap sm:items-center justify-center w-full h-full gap-3">
+      {/* <div className="flex flex-wrap sm:items-center justify-center w-full h-full gap-3">
         {parts.map((part) => (
           <Link
             key={part.href}
@@ -32,7 +35,10 @@ export default function HomePage({}: PageProps) {
             </div>
           </Link>
         ))}
-      </div>
+      </div> */}
+      <Timeline 
+      user={user}
+      main_key="custom_pocketbook_posts" />
     </main>
   );
 }

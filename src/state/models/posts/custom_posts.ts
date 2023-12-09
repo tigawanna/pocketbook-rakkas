@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { CustomPostType } from "./types";
-import { pb_url } from "@/lib/env";
 import { PocketBaseClient } from "@/lib/pb/client";
+import { RAKKAS_PB_URL } from "@/lib/env";
 
 
 const currentdate = dayjs(new Date()).format(
@@ -14,7 +14,7 @@ export async function getPaginatedPosts(
 ) {
   // //no-console(" query vars === ", query_vars);
 
-  const postsUrl = new URL(`${pb_url}/${query_vars.key}`);
+  const postsUrl = new URL(`${RAKKAS_PB_URL}/${query_vars.key}`);
   const { user_id, depth, post_id, profile } = query_vars;
 
   if (query_vars.get_one_post) {

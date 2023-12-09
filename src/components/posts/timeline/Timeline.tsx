@@ -6,25 +6,24 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { PostMutationDialog } from "./PostMutationDialog";
 import { Plus } from "lucide-react";
-import { PBUserRecord } from "@/state/user";
-import React, { useEffect } from "react";
+import React, {useEffect } from "react";
 import { PostsCard } from "./PostCard";
 import { useInView } from "react-intersection-observer";
-import { pb } from "@/state/pb/config";
 import { ScrollArea } from "@/components/shadcn/ui/scroll-area";
-import { ErrorOutput } from "../wrappers/ErrorOutput";
+import { ErrorOutput } from "../../wrappers/ErrorOutput";
 import { getPbPaginatedPosts } from "@/state/models/posts/custom_posts";
+import { PocketbookUserResponse } from "@/lib/pb/db-types";
+import { PocketBaseClient } from "@/lib/pb/client";
+import { tryCatchWrapper } from "@/utils/helpers/async";
+import { usePageContext } from "rakkasjs";
 
 interface TimelineProps {
-  user: PBUserRecord;
+  user: PocketbookUserResponse;
+  main_key: "one_custom_pocketbook_post" | "custom_pocketbook_posts" | "custom_pocketbook_post_replies";
   profile?: "general";
-  main_key:
-    | "one_custom_pocketbook_post"
-    | "custom_pocketbook_posts"
-    | "custom_pocketbook_post_replies";
   extra_keys?: string[];
   post_id?: string;
-  is_replies: boolean;
+  is_replies?: boolean;
 }
 
 export function Timeline({
@@ -33,27 +32,28 @@ export function Timeline({
   extra_keys,
   profile,
   post_id,
-  is_replies,
+  is_replies=false,
 }: TimelineProps) {
   const { ref, inView } = useInView();
   const key = extra_keys ? [main_key, ...extra_keys] : [main_key];
-
+  const page_ctx = usePageContext()
+  const pb= page_ctx.locals.pb
   // console.log("key in tineline  ==== ",key)
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const customPostsQuery = useInfiniteQuery({
     queryKey: key,
     queryFn: ({ queryKey, pageParam }) =>
-      getPbPaginatedPosts(
+    tryCatchWrapper(getPbPaginatedPosts(
         pb,
         { depth: 0, post_id, profile, user_id: user?.id ?? "", key: main_key },
-        pageParam,
-      ),
+        pageParam
+      )),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage && lastPage.result[lastPage.result.length - 1]) {
+      if (lastPage && lastPage?.data?.result[lastPage?.data?.result.length - 1]) {
         return {
-          created: lastPage.result[lastPage?.result.length - 1]?.created_at,
-          id: lastPage.result[lastPage?.result.length - 1]?.post_id,
+          created: lastPage.data?.result[lastPage.data?.result.length - 1]?.created_at,
+          id: lastPage.data?.result[lastPage.data?.result.length - 1]?.post_id,
         };
       }
       return;
@@ -66,7 +66,7 @@ export function Timeline({
     // enabled:false
   });
 
-  const data = customPostsQuery.data;
+  const data = customPostsQuery.data
   // console.log({data})
   useEffect(() => {
     if (inView) {
@@ -89,8 +89,9 @@ export function Timeline({
             <React.Fragment key={i}>
               <div className="h-full w-full flex flex-col gap-3 p-3">
                 {/* <SuspenseList revealOrder="forwards" tail="collapsed"> */}
-                {group.result.map((post) => (
+                {group.data?.result.map((post) => (
                   <PostsCard
+                    pb={pb}
                     key={post.post_id}
                     item={post}
                     user={user}
@@ -128,10 +129,10 @@ export function Timeline({
         {customPostsQuery.isFetchingNextPage
           ? "Loading more..."
           : customPostsQuery.hasNextPage
-            ? ""
-            : !customPostsQuery.isLoading
-              ? ""
-              : null}
+          ? ""
+          : !customPostsQuery.isLoading
+          ? ""
+          : null}
       </button>
     </div>
   );
