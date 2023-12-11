@@ -25,15 +25,15 @@ function Layout({ children }: LayoutProps) {
         <Nprogress isAnimating={location && location?.pending ? true : false} />
       </ClientSuspense>
       <div className="w-full flex h-full gap-2">
-        <div className="w-fit flex h-full gap-2">
+        <div className="min-w-[5%] w-fit flex h-full gap-2">
           <Sidebar />
         </div>
         <div className="w-full flex flex-col gap-2 pt-2">
-          <div className="w-fit flex rounded-xl p-auto">
+          {/* <div className="w-fit flex rounded-xl p-auto">
             <ClientSuspense fallback={<div className="h-5"></div>}>
               <BreadCrumbs />
             </ClientSuspense>
-          </div>
+          </div> */}
           {children}
         </div>
       </div>

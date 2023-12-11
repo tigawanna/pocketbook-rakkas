@@ -7,10 +7,10 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/shadcn/ui/dialog";
-import {  OneCustomPostType } from "@/state/models/posts/types";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PostMutattionForm } from "../mutation/PostForm";
 import { Link } from "rakkasjs";
+import { CustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
 
 
 interface PostMutationDialogProps {
@@ -19,7 +19,7 @@ interface PostMutationDialogProps {
   depth?: number;
   parent?: string;
   user?: PocketbookUserResponse;
-  custom_post?: OneCustomPostType;
+  custom_post?: CustomPocketbookPost;
 }
 
 export function PostMutationDialog({

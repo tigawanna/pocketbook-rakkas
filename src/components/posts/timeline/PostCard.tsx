@@ -9,15 +9,16 @@ import { TimeCompponent } from "../../wrappers/TimeCompponent";
 import {
   createReactionToPost,
   updateReactionToPost,
-} from "@/state/models/posts/posts";
-import {  OneCustomPostType } from "@/state/models/posts/types";
+} from "@/lib/pb/models/custom_routes/posts"
+
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PocketBaseClient, getFileURL } from "@/lib/pb/client";
 import { Link, navigate, useLocation } from "rakkasjs";
+import { CustomPocketbookPost, OneCustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
 
 interface PostCardProps extends React.HTMLAttributes<HTMLDivElement> {
   pb: PocketBaseClient;
-  item: OneCustomPostType;
+  item: CustomPocketbookPost;
   user?: PocketbookUserResponse;
   is_reply: boolean;
 }
@@ -41,9 +42,9 @@ export const PostsCard = ({
   const {current}=  useLocation()
   const one_post_url = new URL(current)
   one_post_url.pathname="/post/"+item?.post_id
-  one_post_url.searchParams.set("depth", (parseInt(item?.post_depth) + 1).toString());
+  one_post_url.searchParams.set("depth", (item?.post_depth + 1).toString());
   one_post_url.searchParams.set("author", item?.creator_id);
-  one_post_url.searchParams.set("depth", (parseInt(item?.post_depth) + 1).toString());
+  one_post_url.searchParams.set("depth", (item?.post_depth + 1).toString());
 
   
   const profile_url= new URL(current)
@@ -53,17 +54,14 @@ export const PostsCard = ({
   // console.log({ item });
 
   const post_params = ` post_description=${item?.post_body}
-  &post_author=${item?.creator_name}&depth=${parseInt(item?.post_depth) + 1}`;
+  &post_author=${item?.creator_name}&depth=${item?.post_depth + 1}`;
   const card_styles = twMerge(
     `w-full h-full p-1 flex flex-col hover:shadow-sm hover:shadow-accent-foreground
     border shadow-secondary-foreground shadow rounded-md`,
     props.className,
   );
   return (
-    <Suspense
-      key={item.post_id}
-      fallback={<Skeleton className="w-full h-[100px] rounded-full" />}
-    >
+
       <div
         onClick={(e) => {
           e.stopPropagation();
@@ -132,14 +130,14 @@ export const PostsCard = ({
           <PostReactionsCard user={user} item={item} pb={pb}/>
         </div>
       </div>
-    </Suspense>
+
   );
 };
 
 interface PostReactionsCardProps {
   pb: PocketBaseClient;
   user?: PocketbookUserResponse;
-  item: OneCustomPostType;
+  item: CustomPocketbookPost;
 }
 
 export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => {
@@ -176,8 +174,8 @@ export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => 
                 ) {
                   updateReactionMutation.mutate({
                     pb,
-                    is_liked: item.mylike,
-                    reaction_id: item.reaction_id,
+                    is_liked: item?.mylike,
+                    reaction_id: item?.reaction_id,
                   });
                   setLiked((prev) => !prev);
                 } else {
@@ -197,7 +195,7 @@ export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => 
         </div>
         <div className="flex items-center justify-center gap-1">
           <PostMutationDialog
-            depth={parseInt(item.post_depth + 1)}
+            depth={item?.post_depth + 1}
             parent={item?.post_id}
             user={user}
             label={`replying to ${item?.creator_name}`}

@@ -8,8 +8,8 @@ interface SidebarProps {}
 export function Sidebar({}: SidebarProps) {
   return (
     <header
-      className="min-h-[99vh]  flex flex-col  justify-between items-center   
-      sticky top-0 z-30 gap-1 "
+      className="stickt top-0 min-h-[99vh]  flex flex-col  justify-between items-center   
+    z-30 gap-1 "
     >
       <div className="w-full h-full flex flex-col justify-between items-center bg-primary p-2 pb-12 pt-3">
         <Link href="/" className="text-2xl font-bold">

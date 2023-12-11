@@ -1,63 +1,53 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
-"use client";
-
+import { PostsCard } from "@/components/posts/timeline/PostCard";
+import { PostMutationDialog } from "@/components/posts/timeline/PostMutationDialog";
+import { ScrollArea } from "@/components/shadcn/ui/scroll-area";
+import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
+import {
+  getCustomPocketbookPostReplies,
+  getCustomPocketbookPosts,
+} from "@/lib/pb/models/custom_routes/posts";
+import { CustomPocketbookRoutesEndpoints } from "@/lib/pb/models/custom_routes/types";
+import { useUser } from "@/lib/rakkas/hooks/useUser";
+import { tryCatchWrapper } from "@/utils/helpers/async";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { PostMutationDialog } from "./PostMutationDialog";
 import { Plus } from "lucide-react";
-import React, { useEffect } from "react";
-import { PostsCard } from "./PostCard";
-import { useInView } from "react-intersection-observer";
-import { ScrollArea } from "@/components/shadcn/ui/scroll-area";
-import { ErrorOutput } from "../../wrappers/ErrorOutput";
-import { getPbPaginatedPosts } from "@/state/models/posts/custom_posts";
-import { PocketbookUserResponse } from "@/lib/pb/db-types";
-import { tryCatchWrapper } from "@/utils/helpers/async";
 import { usePageContext } from "rakkasjs";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
-interface TimelineProps {
-  user: PocketbookUserResponse;
-  main_key:
-    | "one_custom_pocketbook_post"
-    | "custom_pocketbook_posts"
-    | "custom_pocketbook_post_replies";
-  profile?: "general";
-  extra_keys?: string[];
-  post_id?: string;
-  is_replies?: boolean;
+interface RepliesTimelineProps {
+  parent: string;
+  depth: number;
+  limit?: number;
 }
 
-export function Timeline({
-  user,
-  main_key,
-  extra_keys,
-  profile,
-  post_id,
-  is_replies = false,
-}: TimelineProps) {
+export function RepliesTimeline({
+  depth,
+  parent,
+  limit = 6,
+}: RepliesTimelineProps) {
   const { ref, inView } = useInView();
-  const key = extra_keys ? [main_key, ...extra_keys] : [main_key];
+  const { user } = useUser();
   const page_ctx = usePageContext();
   const pb = page_ctx.locals.pb;
   // console.log("key in tineline  ==== ",key)
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const customPostsQuery = useInfiniteQuery({
-    queryKey: key,
+    queryKey: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
     queryFn: ({ queryKey, pageParam }) =>
       tryCatchWrapper(
-        getPbPaginatedPosts(
+        getCustomPocketbookPostReplies({
           pb,
-          {
-            depth: 0,
-            post_id,
-            profile,
-            user_id: user?.id ?? "",
-            key: main_key,
+          query_vars: {
+            depth,
+            user_id: pb?.authStore?.model?.id,
+            parent,
+            limit,
           },
-          pageParam,
-        ),
+          pagination_params: pageParam,
+        }),
       ),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.data?.result) {
@@ -85,15 +75,18 @@ export function Timeline({
   });
 
   const data = customPostsQuery.data;
-  // console.log({data})
+  const all_data = data?.pages.flatMap((page) => page.data?.result);
+
+  const show_load_more =
+    (!customPostsQuery.isLoading || !customPostsQuery.isRefetching)&& (all_data&&all_data?.length>0)
+
   useEffect(() => {
-    if (inView) {
+    if (inView && !customPostsQuery.isFetching) {
       customPostsQuery.fetchNextPage();
     }
   }, [inView]);
-
   return (
-    <div className="w-full h-full flex flex-col  items-center justify-center">
+    <div className="w-full h-full flex flex-col  items-center ">
       {customPostsQuery?.error && (
         <ErrorOutput error={customPostsQuery.error} />
       )}
@@ -101,7 +94,7 @@ export function Timeline({
         <div className="p-5 bg-base-200">Nothing to show for now</div>
       )}
 
-      <ScrollArea className="h-full w-full flex flex-col ">
+      <ScrollArea className="w-[90%] flex flex-col gap-5 ">
         {data &&
           data.pages.map((group, i) => (
             <React.Fragment key={i}>
@@ -113,13 +106,32 @@ export function Timeline({
                     key={post.post_id}
                     item={post}
                     user={user}
-                    is_reply={is_replies}
+                    is_reply={false}
                   />
                 ))}
                 {/* </SuspenseList> */}
               </div>
             </React.Fragment>
           ))}
+        <div className="w-full flex flex-col items-center justify-center my-3">
+          {show_load_more && (
+            <button
+              ref={ref}
+              onClick={() => customPostsQuery.fetchNextPage()}
+              disabled={
+                !customPostsQuery.hasNextPage ||
+                customPostsQuery.isFetchingNextPage
+              }
+              className="btn btn-sm btn-wide bg-base-accent"
+            >
+              {customPostsQuery.isFetchingNextPage
+                ? "Loading more..."
+                : customPostsQuery.hasNextPage
+                  ? "Load More"
+                  : "No more replies"}
+            </button>
+          )}
+        </div>
       </ScrollArea>
 
       <div
@@ -137,7 +149,7 @@ export function Timeline({
         />
       </div>
 
-      <button
+      {/* <button
         ref={ref}
         onClick={() => customPostsQuery.fetchNextPage()}
         disabled={
@@ -151,7 +163,7 @@ export function Timeline({
             : !customPostsQuery.isLoading
               ? ""
               : null}
-      </button>
+      </button> */}
     </div>
   );
 }

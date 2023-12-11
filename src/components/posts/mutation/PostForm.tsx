@@ -9,15 +9,15 @@ import { X } from "lucide-react";
 
 import { SetStateAction } from "react";
 import {
-  PostMutationInput,
   createNewPost,
   updatePost,
-} from "@/state/models/posts/posts";
-import {  OneCustomPostType } from "@/state/models/posts/types";
+} from "@/lib/pb/models/custom_routes/posts";
+
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
 import { useMutationWrapper } from "@/state/hooks/useMutation";
 import { usePageContext } from "rakkasjs";
+import { CustomPocketbookPost} from "@/lib/pb/models/custom_routes/types";
 
 interface PostMutattionFormProps {
   user: PocketbookUserResponse;
@@ -25,7 +25,7 @@ interface PostMutattionFormProps {
   setOpen: React.Dispatch<SetStateAction<boolean | undefined>>;
   depth?: number;
   parent?: string;
-  custom_post?: OneCustomPostType;
+  custom_post?: CustomPocketbookPost;
 }
 
 export function PostMutattionForm({
@@ -37,7 +37,7 @@ export function PostMutattionForm({
   label,
 }: PostMutattionFormProps) {
   const { error, handleChange, input, setInput, setError } =
-    useFormHook<PostMutationInput>({
+    useFormHook({
       initialValues: {
         body: "",
         media: null,
@@ -123,7 +123,7 @@ export function PostMutattionForm({
         {/* location */}
         {/* property location */}
 
-        <FormTextArea<PostMutationInput>
+        <FormTextArea
           error={error}
           onChange={handleChange}
           input={input}
@@ -134,9 +134,10 @@ export function PostMutattionForm({
         {/* image input section  */}
         {/* <div className="relative h-[40%] w-full"> */}
         <ImageInput
-          image={input.media as string}
+          image={input.media}
           alt_image=""
           updateImage={(image) => {
+            // @ts-expect-error
             setInput((prev) => {
               return {
                 ...prev,

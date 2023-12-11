@@ -30,7 +30,7 @@ export function useMutationWrapper<V, R>({
     meta: { invalidates },
     onSuccess(data, variables, context) {
       setError && setError({ name: "", message: "" });
-      toast("success", { type: "success" });
+      // toast("success", { type: "success" });
       // updateNotification({
       //   type: "success",
       //   message: success_message ?? "success",
@@ -38,7 +38,7 @@ export function useMutationWrapper<V, R>({
       // refresh && router.refresh();
     },
     onError(error, variables, context) {
-      toast(error.message, { type: "error" });
+      // toast(error.message, { type: "error" });
       setError && setError({ name: "main", message: error.message });
     },
   });
