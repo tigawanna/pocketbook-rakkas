@@ -7,20 +7,18 @@ import { RootTimeline } from "@/components/posts/timeline/RootTimeline";
 
 interface ProfileTabsProps {
 profile_id:string; 
-profile_posts_key: readonly ["custom_posts", string];
 followers_count: number | undefined
 following_count: number | undefined
 }
 
 export function ProfileTabs({
   profile_id,
-  profile_posts_key,
   followers_count,
   following_count
 }: ProfileTabsProps) {
   return (
-    <Tabs defaultValue="posts" className="w-full">
-      <TabsList className="w-full flex sticky top-2 z-50">
+    <Tabs defaultValue="posts" className="w-[95%] max-h-screen">
+      <TabsList className="w-[95%] flex sticky top-10 z-50 bg-base-200">
         <TabsTrigger value="posts" className="w-full">
           Posts
         </TabsTrigger>
@@ -34,12 +32,11 @@ export function ProfileTabs({
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="posts" className="flex">
+      <TabsContent
+        value="posts"
+        className="flex items-center z-30  max-h-screen overflow-y-scroll"
+      >
         <RootTimeline profile={profile_id} />
-
-        <div className="hidden lg:flex h-full w-[50%] m-2 p-2 sticky top-[10%]">
-          <SidePanel />
-        </div>
       </TabsContent>
 
       <TabsContent value="followers">
