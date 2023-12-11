@@ -663,14 +663,7 @@ export type UtilityTenantsCollection = {
 
 
 
-export enum CustomPocketbookRoutesType {
-  CustomPocketbookNotificationsCount="custom_pocketbook_notifications_count",
-  CustomPocketbookFriends = 'custom_pocketbook_friends',
-  CustomPocketbookPosts = 'custom_pocketbook_posts',
-  OneCustomPocketbookPost = 'one_custom_pocketbook_post',
-  CustomPocketbookPostReplies = 'custom_pocketbook_post_replies',
-  // Add other collection names here
-}
+
 // ===== Schema =====
 
 export type Schema = {
