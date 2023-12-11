@@ -34,7 +34,7 @@ export default function OnePostPage({ params, url }: PageProps) {
   const depth = url.searchParams.get("depth") ?? "1";
   const one_post = query.data?.data?.result;
 
-  console.log(window?.history);
+
   return (
     <main className="flex items-center justify-center h-[99vh] w-full  gap-3 overflow-y-scroll ">
       <div className="w-full h-full flex flex-col items-center justify-start gap-2 p-2 ">

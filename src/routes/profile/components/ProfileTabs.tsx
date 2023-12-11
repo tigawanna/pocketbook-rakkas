@@ -18,7 +18,7 @@ export function ProfileTabs({
 }: ProfileTabsProps) {
   return (
     <Tabs defaultValue="posts" className="w-[95%] max-h-screen">
-      <TabsList className="w-[95%] flex sticky top-10 z-50 bg-base-200">
+      <TabsList className="w-[95%] flex sticky top-[6%] z-50 bg-base-200">
         <TabsTrigger value="posts" className="w-full">
           Posts
         </TabsTrigger>
@@ -34,9 +34,12 @@ export function ProfileTabs({
 
       <TabsContent
         value="posts"
-        className="flex items-center z-30  max-h-screen overflow-y-scroll"
+        className="flex   max-h-screen overflow-y-scroll"
       >
         <RootTimeline profile={profile_id} />
+        <div className="hidden lg:flex min-h-[200px] h-full w-[40%] p-2 sticky top-[12%]">
+          <SidePanel />
+        </div>
       </TabsContent>
 
       <TabsContent value="followers">

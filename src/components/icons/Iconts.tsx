@@ -1,3 +1,5 @@
+import { LucideProps } from "lucide-react";
+
 export type IconProps = React.HTMLAttributes<SVGElement>;
 export const Icons = {
   gopher: (props: IconProps) => (
@@ -9,11 +11,11 @@ export const Icons = {
       preserveAspectRatio="xMidYMid"
       fill="#000000"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></g>
       <g id="SVGRepo_iconCarrier">
         {" "}
@@ -168,7 +170,7 @@ export const Icons = {
     </svg>
   ),
 
-  gitHub: (props: LucideProps) => (
+  gitHub: (props: IconProps) => (
     <svg viewBox="0 0 438.549 438.549" {...props}>
       <path
         fill="currentColor"

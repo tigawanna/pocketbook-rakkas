@@ -9,26 +9,27 @@ import {
   getFollowerscount,
   getFollowingCount,
 } from "@/state/models/friends/friends";
-import { Suspense } from "react";
-export default function ProfilePage({ params }: PageProps) {
+
+export default function OneProfilePage({params}: PageProps) {
   const { user: logged_in, pb } = useUser();
+  const profile_id = params.id;
   const profile_query = useQuery({
-    queryKey: ["profile", params.id],
+    queryKey: ["profile", profile_id],
     queryFn: () =>
-      tryCatchWrapper(pb.collection("pocketbook_user").getOne(params.id)),
+      tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id)),
   });
-  const follower_count_key = ["followers", params.id];
-  const following_count_key = ["following", params.id];
+  const follower_count_key = ["followers", profile_id];
+  const following_count_key = ["following", profile_id];
 
   const count_query = useQueries({
     queries: [
       {
         queryKey: follower_count_key,
-        queryFn: () => tryCatchWrapper(getFollowerscount(pb, params.id)),
+        queryFn: () => tryCatchWrapper(getFollowerscount(pb, profile_id)),
       },
       {
         queryKey: following_count_key,
-        queryFn: () => tryCatchWrapper(getFollowingCount(pb, params.id)),
+        queryFn: () => tryCatchWrapper(getFollowingCount(pb, profile_id)),
       },
     ],
   });
@@ -37,8 +38,8 @@ export default function ProfilePage({ params }: PageProps) {
 
   const profile_user = profile_query.data?.data;
   return (
-    <div className="w-full flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll">
-      <div className="w-full  flex gap-2 items-center sticky top-0 z-50 ">
+    <div className="w-full flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll p-2">
+      <div className="w-[95%]  flex gap-2 items-center sticky top-0 z-50 ">
         {/* <Link href="-1"> */}
         <ChevronLeft
           onClick={() => history?.back()}
@@ -51,7 +52,7 @@ export default function ProfilePage({ params }: PageProps) {
       {profile_query.isPending ? (
         <div className="w-full ">loading</div>
       ) : (
-        <div className="w-full min-h-[200px]">
+        <div className="w-full ">
           {profile_user && (
             <ProfileUserInfo data={profile_user} logged_in_user={logged_in} />
           )}
@@ -62,7 +63,7 @@ export default function ProfilePage({ params }: PageProps) {
         <div className="w-full ">loading</div>
       ) : (
         <ProfileTabs
-          profile_id={params.id}
+          profile_id={profile_id}
           followers_count={followers_count}
           following_count={following_count}
         />

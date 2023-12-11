@@ -53,7 +53,7 @@ export function ProfileUserInfo({
         )}
         {profile_user.github_login !== "" && (
           <span className="flex gap-2  items-center hover:text-accent">
-            <Icons.gitHub size={5} className="h-4 w-4" />
+            <Icons.gitHub  className="h-4 w-4" />
             <Link
               href={`https://github.com/${profile_user.github_login}`}
               target="_blank"
@@ -73,8 +73,9 @@ export function ProfileUserInfo({
           <ProfileForm user={profile_user} />
         </DialogWrapper>
       ) : (
-        <Button className="border bg-accent hover:border-accent-foreground hover:text-accent-foreground">
-          Follow
+        <Button 
+        className="border bg-accent hover:border-accent-foreground hover:text-accent-foreground">
+          Follow/Unfollow : fix me
         </Button>
       )}
     </div>

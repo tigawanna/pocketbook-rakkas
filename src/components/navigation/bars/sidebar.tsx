@@ -1,29 +1,42 @@
 import { Link } from "rakkasjs";
-import { Home } from "lucide-react";
+import { Home, User2Icon } from "lucide-react";
 import { MiniSettingsModal } from "../mini-settings/MiniSettings";
-
+import { Icons } from "@/components/icons/Iconts";
 
 interface SidebarProps {}
 
 export function Sidebar({}: SidebarProps) {
+  const routes = [
+    { name: "home", url: "/", icon: <Home /> },
+    { name: "profile", url: "/profile", icon: <User2Icon /> },
+  ];
   return (
     <header
-      className="stickt top-0 min-h-[99vh]  flex flex-col  justify-between items-center   
+      className="sticky top-0 min-h-[99vh]  flex flex-col  justify-between items-center bg-base-300  
     z-30 gap-1 "
     >
-      <div className="w-full h-full flex flex-col justify-between items-center bg-primary p-2 pb-12 pt-3">
+      <div className="w-full h-full flex flex-col justify-between items-center p-2 pb-12 pt-3">
         <Link href="/" className="text-2xl font-bold">
-          <Home />
+          <Home className="h-10 w-10"/>
         </Link>
-        <Link
-          href="/"
-          className="text-3xl  items-center flex gap-3 
-        hover:bg-base-300 
-        rounded-lg p-2 lg:p-4"
-        >
-          <Home />
-          <div className="hidden lg:flex text-2xl fornt-bold">Home</div>
-        </Link>
+
+        <div className="flex flex-col gap-3 items-center divide-y-2">
+          {routes.map((route) => (
+            <Link
+            key={route.name}
+              href={route.url}
+              data-tip={route.name}
+              className="text-3xl  items-center flex gap-3 
+                hover:bg-base-300 
+              rounded-lg p-2 lg:p-4 tooltip hover:tooltip-top"
+            >
+              {route.icon}
+              <div className="hidden lg:flex text-2xl fornt-bold">
+                {route.name}
+              </div>
+            </Link>
+          ))}
+        </div>
         <MiniSettingsModal />
       </div>
     </header>
