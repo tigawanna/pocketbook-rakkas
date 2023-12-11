@@ -1,20 +1,18 @@
 "use client";
 import { useMutationWrapper } from "@/state/hooks/useMutation";
 import { Heart,MessageSquare } from "lucide-react";
-import React, { Suspense } from "react";
+import React from "react";
 import { PostMutationDialog } from "./PostMutationDialog";
 import { twMerge } from "tailwind-merge";
-import { Skeleton } from "@/components/shadcn/ui/skeleton";
 import { TimeCompponent } from "../../wrappers/TimeCompponent";
 import {
   createReactionToPost,
   updateReactionToPost,
 } from "@/lib/pb/models/custom_routes/posts"
-
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PocketBaseClient, getFileURL } from "@/lib/pb/client";
 import { Link, navigate, useLocation } from "rakkasjs";
-import { CustomPocketbookPost, OneCustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
+import { CustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
 
 interface PostCardProps extends React.HTMLAttributes<HTMLDivElement> {
   pb: PocketBaseClient;
@@ -48,8 +46,11 @@ export const PostsCard = ({
 
   
   const profile_url= new URL(current)
-  profile_url.pathname="/profile"
-  profile_url.searchParams.set("id", item?.creator_id);
+  profile_url.pathname="/profile/"+item?.creator_id
+  profile_url.searchParams.forEach((value, key) => {
+    profile_url.searchParams.delete(key);
+  })
+  // profile_url.searchParams.set("id", item?.creator_id);
 
   // console.log({ item });
 
@@ -82,8 +83,8 @@ export const PostsCard = ({
               e.stopPropagation();
               // push(`/profile/${item?.creator_id}`);
             }}
-            className="w-fit px-1 flex justify-start items-center gap-[1px]
-                 cursor-pointer hover:bg-base-300 rounded-full"
+            className="w-fit p-1 flex justify-start items-center gap-[1px]
+                 cursor-pointer hover:bg-base-100 rounded-full"
           >
             <div className=" h-8 w-8 md:w-10 md:h-10 ">
               {item?.creator_image ? (

@@ -1,11 +1,10 @@
 import { PocketBaseClient } from "@/lib/pb/client";
 import {
   CreateFrienshipMutaionProps,
-  FriendRecord,
   UpdateFriendShipMutationProps,
 } from "./types";
 import { and, expand, or } from "typed-pocketbase";
-import { CustomPocketbookRoutesType } from "@/lib/pb/db-types";
+
 
 export async function getFollowingCount(pb: PocketBaseClient, user_id: string) {
   // console.log("user id  == ",user_id)

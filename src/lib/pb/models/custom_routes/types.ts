@@ -76,3 +76,38 @@ export type OneCustomPocketbookPost = {
     };
   };
 };
+
+
+export interface CustomPocketbookFriend {
+  friendship_id: string,
+  friend_avatar:string,
+  friend_username:string,
+  friend_email:string,
+  created: string,
+  updated: string,
+  user_a: string,
+  user_b: string,
+  user_a_follow_user_b: string,
+  user_b_follow_user_a: string,
+  following_me: string,
+  followed_by_me: string
+}
+
+          // logged_in: c.queryParam("logged_in"),
+          // id: c.queryParam("id"),
+          // created:isParamEmpty(c.queryParam("created"),new Date().toISOString()),
+          // limit: isParamEmpty(c.queryParam("limit"),5)
+export type CustomPocketbookFriends = {
+  endpoint: CustomPocketbookRoutesEndpoints.CustomPocketbookFriends;
+  params: {
+    id: string;
+    logged_in: string;
+    created?: string;
+    limit?: number;
+  };
+  response: {
+    "200": {
+      result: CustomPocketbookPost;
+    };
+  };
+};

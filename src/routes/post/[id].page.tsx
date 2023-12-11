@@ -7,7 +7,7 @@ import { useUser } from "@/lib/rakkas/hooks/useUser";
 import { tryCatchWrapper } from "@/utils/helpers/async";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react";
-import { Link, PageProps, navigate, usePageContext } from "rakkasjs";
+import { PageProps,usePageContext } from "rakkasjs";
 
 
 export default function OnePostPage({ params, url }: PageProps) {
@@ -38,7 +38,7 @@ export default function OnePostPage({ params, url }: PageProps) {
   return (
     <main className="flex items-center justify-center h-[99vh] w-full  gap-3 overflow-y-scroll ">
       <div className="w-full h-full flex flex-col items-center justify-start gap-2 p-2 ">
-        <div className="w-full  flex gap-2 items-center sticky top-0 bg-base-300 ">
+        <div className="w-full  flex gap-2 items-center sticky top-0  ">
           {/* <Link href="-1"> */}
             <ChevronLeft
             onClick={()=>history?.back()}

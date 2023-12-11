@@ -7,6 +7,7 @@ export function useUser() {
   const page_ctx = usePageContext();
   const qc = useQueryClient();
   const locals = page_ctx.locals;
+  const pb= locals.pb
 
   const clearAuthStore = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -48,6 +49,7 @@ export function useUser() {
 
   return {
     user,
+    pb,
     user_mutation: mutation,
     page_ctx,
     loggout: mutation.mutate,
