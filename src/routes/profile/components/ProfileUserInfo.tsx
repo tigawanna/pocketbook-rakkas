@@ -1,31 +1,36 @@
 import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
 import { Button } from "@/components/shadcn/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
-import { PocketbookUserResponse } from "@/lib/pb/db-types";
+import { PocketbookFriendshipResponse, PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Icons } from "@/components/icons/Iconts";
 import { DialogWrapper } from "@/components/pocketbook/dialog/DialodWrapper";
 import { relativeDate } from "@/utils/helpers/date";
 import { ProfileForm } from "@/routes/profile/components/ProfileForm";
-import { Link } from "rakkasjs";
+import { Link, usePageContext } from "rakkasjs";
 import { isString } from "@/utils/helpers/string";
+import { ProfileFireindshipButton } from "./friends/profileFireindshipButton";
+
+
 
 interface ProfileUserInfoProps {
-  data: PocketbookUserResponse;
-  logged_in_user: PocketbookUserResponse;
+  profile_user: PocketbookUserResponse;
+  logged_in_user:PocketbookFriendshipResponse;
 }
 
 export function ProfileUserInfo({
-  data,
+  profile_user,
   logged_in_user,
 }: ProfileUserInfoProps) {
-  if (data instanceof Error) {
+  const page_ctx = usePageContext();
+  const pb = page_ctx.locals.pb;
+  if (profile_user instanceof Error) {
     return (
       <div className="min-h-screen h-full w-full flex items-center justify-center">
-        <ErrorOutput error={data} />
+        <ErrorOutput error={profile_user} />
       </div>
     );
   }
-  const profile_user = data;
+
   return (
     <div
       className="w-full flex flex-col md:flex-row items-center justify-center bg-base-300 p-3 gap-2 
@@ -53,7 +58,7 @@ export function ProfileUserInfo({
         )}
         {profile_user.github_login !== "" && (
           <span className="flex gap-2  items-center hover:text-accent">
-            <Icons.gitHub  className="h-4 w-4" />
+            <Icons.gitHub className="h-4 w-4" />
             <Link
               href={`https://github.com/${profile_user.github_login}`}
               target="_blank"
@@ -73,10 +78,8 @@ export function ProfileUserInfo({
           <ProfileForm user={profile_user} />
         </DialogWrapper>
       ) : (
-        <Button 
-        className="border bg-accent hover:border-accent-foreground hover:text-accent-foreground">
-          Follow/Unfollow : fix me
-        </Button>
+        <ProfileFireindshipButton profile_user={profile_user} />
+        // <FollowButton pb={pb} friend={profile_user} me={logged_in_user} />
       )}
     </div>
   );

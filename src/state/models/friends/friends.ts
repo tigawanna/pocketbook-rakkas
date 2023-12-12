@@ -66,39 +66,6 @@ export async function getFollowerscount(pb: PocketBaseClient, user_id: string) {
   }
 }
 
-export async function createFriendship({
-  pb,
-  me,
-  them,
-}: CreateFrienshipMutaionProps) {
-  try {
-    const new_friend = await pb.collection("pocketbook_friends").create({
-      user_a: me,
-      user_b: them,
-      user_a_follow_user_b: "yes",
-      user_b_follow_user_a: "no",
-    });
-    return new_friend;
-  } catch (error: any) {
-    console.log(`error following user: ${them} `, error.data);
-    throw new Error(error);
-  }
-}
 
 
 
-export async function updateFriendship({
-  pb,
-  friendship_id,
-  friendship,
-}: UpdateFriendShipMutationProps) {
-  try {
-    const new_friend = await pb
-      .collection("pocketbook_friends")
-      .update(friendship_id, friendship);
-    return new_friend;
-  } catch (error: any) {
-    console.log(`error following user:`, error.data);
-    throw new Error(error);
-  }
-}

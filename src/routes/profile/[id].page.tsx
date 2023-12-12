@@ -10,13 +10,14 @@ import {
   getFollowingCount,
 } from "@/state/models/friends/friends";
 
+
 export default function OneProfilePage({params}: PageProps) {
   const { user: logged_in, pb } = useUser();
   const profile_id = params.id;
   const profile_query = useQuery({
     queryKey: ["profile", profile_id],
     queryFn: () =>
-      tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id)),
+      tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id,{})),
   });
   const follower_count_key = ["followers", profile_id];
   const following_count_key = ["following", profile_id];
@@ -49,15 +50,15 @@ export default function OneProfilePage({params}: PageProps) {
         {/* </Link> */}
         <h1 className="text-3xl font-bold">Profile</h1>
       </div>
-      {profile_query.isPending ? (
-        <div className="w-full ">loading</div>
-      ) : (
-        <div className="w-full ">
-          {profile_user && (
-            <ProfileUserInfo data={profile_user} logged_in_user={logged_in} />
-          )}
-        </div>
-      )}
+      <div className="w-full ">
+        {profile_user && (
+          <ProfileUserInfo
+            profile_user={profile_user}
+            logged_in_user={logged_in}
+          />
+        )}
+      </div>
+
 
       {profile_query.isPending ? (
         <div className="w-full ">loading</div>

@@ -67,6 +67,34 @@ export type PocketbookUserCollection = {
     'pocketbook_posts(user)': PocketbookPostsCollection[];
     'pocketbook_friends(user_a)': PocketbookFriendsCollection[];
     'pocketbook_friends(user_b)': PocketbookFriendsCollection[];
+    'pocketbook_friendship(user_a)': PocketbookFriendshipCollection[];
+    'pocketbook_friendship(user_b)': PocketbookFriendshipCollection[];
+  };
+};
+
+// ===== pocketbook_friendship =====
+
+export type PocketbookFriendshipResponse = {
+  user_a?: string;
+  user_b?: string;
+  user_a_name?: string;
+  user_b_name?: string;
+  user_a_avatar?: string;
+  user_b_avatar?: string;
+  user_a_email?: string;
+  user_b_email?: string;
+  user_a_follow_user_b?: 'yes' | 'no';
+  user_b_follow_user_a?: 'yes' | 'no';
+} & ViewCollectionRecord;
+
+export type PocketbookFriendshipCollection = {
+  type: 'view';
+  collectionId: 'wiu3lrsh66aclxe';
+  collectionName: 'pocketbook_friendship';
+  response: PocketbookFriendshipResponse;
+  relations: {
+    user_a: PocketbookUserCollection;
+    user_b: PocketbookUserCollection;
   };
 };
 
@@ -679,6 +707,7 @@ export type Schema = {
   pocketbook_notifications: PocketbookNotificationsCollection;
   pocketbook_posts: PocketbookPostsCollection;
   pocketbook_friends: PocketbookFriendsCollection;
+  pocketbook_friendship: PocketbookFriendshipCollection;
 // utility
   // utility_shops: UtilityShopsCollection;
   // utility_staff: UtilityStaffCollection;

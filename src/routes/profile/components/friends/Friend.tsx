@@ -1,12 +1,12 @@
 import { Mail } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import { updateFriendship } from "@/state/models/friends/friends";
 import AsyncButton from "@/components/wrappers/AsyncButton";
 import { useState } from "react";
 import { PocketBaseClient } from "@/lib/pb/client";
 import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Link } from "rakkasjs";
+import { updateFriendship } from "@/state/models/friends/frenship";
 
 
 interface FriendProps {
