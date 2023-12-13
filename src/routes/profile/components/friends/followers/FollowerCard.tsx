@@ -3,24 +3,25 @@ import { useMutation } from "@tanstack/react-query";
 import AsyncButton from "@/components/wrappers/AsyncButton";
 import { useState } from "react";
 import { PocketBaseClient } from "@/lib/pb/client";
-import {  PocketbookFriendshipResponse, PocketbookUserResponse } from "@/lib/pb/db-types";
+import {  PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Link } from "rakkasjs";
 import { updateFriendship } from "@/state/models/friends/frenship";
 import { isString } from "@/utils/helpers/string";
 import { FollowButton } from "./FollowButton";
+import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
 
 
 interface FollowerCardProps {
-  pb:PocketBaseClient
-  friend:PocketbookFriendshipResponse;
-  profile_id:string;
+  pb: PocketBaseClient;
+  friend: CustomPocketbookFriend;
+  profile_id: string;
   me: PocketbookUserResponse;
 }
 
 export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) {
   return (
     <Link
-      href={`../profile/${friend.id}`}
+      href={`../profile/${friend.friendship_id}`}
       className="w-full lg:w-[45%] flex items-center  gap-2 p-2 bg-base-300
       rounded-lg border border-accent shadow "
     >
@@ -81,7 +82,7 @@ export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) 
 
 interface FollowButtonProps {
   pb: PocketBaseClient;
-  friend: PocketbookFriendshipResponse;
+  friend: CustomPocketbookFriend;
   profile_id: string;
   me: PocketbookUserResponse;
 }
@@ -136,7 +137,7 @@ export function InlineFollowButton({ pb,friend, me,profile_id }: FollowButtonPro
           follow_mutation.mutate({
             pb,
             friendship: follow_user,
-            friendship_id: friend.id,
+            friendship_id: friend.friendship_id,
           });
           setFollowing(!am_following);
         }}
@@ -156,7 +157,7 @@ export function InlineFollowButton({ pb,friend, me,profile_id }: FollowButtonPro
           follow_mutation.mutate({
             pb,
             friendship: unfollow_user,
-            friendship_id: friend.id,
+            friendship_id: friend.friendship_id,
           });
           setFollowing(!am_following);
         }}

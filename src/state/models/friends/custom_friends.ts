@@ -5,17 +5,15 @@ import { CustomPocketbookFriend, CustomPocketbookRoutesEndpoints } from "@/lib/p
 
 
 
-
-
 const currentdate = dayjs(new Date()).format(
   "[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]",
 );
 
 export interface QueryVariables {
-  user_id?: string;
+  last_id?: string;
   logged_in: string;
   type: "followers" | "following";
-  id?: string;
+  profile_id:string;
   limit: string;
   created: string;
 }
@@ -30,10 +28,10 @@ export async function getPbPaginatedFriends(
   query_vars: QueryVariables,
   pagination_params?: Partial<Pagination_params>,
 ) {
-  const { user_id, logged_in, type } = query_vars;
+  const { profile_id, logged_in, type } = query_vars;
   const params: QueryVariables = {
-    id: pagination_params?.id,
-    user_id,
+    last_id: pagination_params?.id,
+    profile_id,
     logged_in,
     type,
     limit: "5",
@@ -42,7 +40,8 @@ export async function getPbPaginatedFriends(
 
   try {
     const friends = await pb.send<{ result: CustomPocketbookFriend[] }>(
-      CustomPocketbookRoutesEndpoints.CustomPocketbookFriends,
+      type==="followers"?CustomPocketbookRoutesEndpoints.CustomPocketbookFollowers:
+      CustomPocketbookRoutesEndpoints.CustomPocketbookFollowing,
       {
         params,
         headers: {

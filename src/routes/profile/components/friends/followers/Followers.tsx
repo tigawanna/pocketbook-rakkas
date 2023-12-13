@@ -1,5 +1,5 @@
 "use client";
-import { QueryVariables } from "@/state/models/friends/custom_friends";
+import { QueryVariables, getPbPaginatedFriends } from "@/state/models/friends/custom_friends";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { FollowerCard } from "./FollowerCard";
@@ -23,48 +23,55 @@ export function Followers({
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const params: QueryVariables = {
+    profile_id,
     created: currentdate,
     limit,
     logged_in: logged_in.id,
     type:"followers",
-    user_id: profile_id,
   };
 
   const query_key = ["profile",`followers`, params];
   
-
-
   const query = useInfiniteQuery({
     queryKey: query_key,
     queryFn: ({ queryKey, pageParam }) =>
-      tryCatchWrapper(
-        pb.collection("pocketbook_friendship").getList(pageParam?.page, 12, {
-          filter: or(
-            and(
-              ["user_a.id", "=", profile_id],
-              ["user_b_follow_user_a", "=", "yes"],
-            ),
-            and(
-              ["user_b.id", "=", profile_id],
-              ["user_a_follow_user_b", "=", "yes"],
-            ),
-          ),
-        }),
-      ),
+      getPbPaginatedFriends(pb, params, pageParam),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data) {
+      if (lastPage && lastPage[lastPage.length - 1]) {
         return {
-          page: lastPage.data.page + 1,
+          created: lastPage[lastPage?.length - 1]?.created,
+          id: lastPage[lastPage?.length - 1]?.friendship_id,
         };
       }
-
       return;
     },
     initialPageParam: {
-      page: 1,
+      created: currentdate,
+      id: "",
     },
     // enabled:false
   });
+
+  // const query = useInfiniteQuery({
+  //   queryKey: query_key,
+  //   queryFn: ({ queryKey, pageParam }) =>
+  //     tryCatchWrapper(
+  //       pb.send()
+  //     ),
+  //   getNextPageParam: (lastPage, allPages) => {
+  //     if (lastPage.data) {
+  //       return {
+  //         page: lastPage.data.page + 1,
+  //       };
+  //     }
+
+  //     return;
+  //   },
+  //   initialPageParam: {
+  //     page: 1,
+  //   },
+  //   // enabled:false
+  // });
 
   useEffect(() => {
     if (inView) {
@@ -111,14 +118,14 @@ export function Followers({
               key={idx}
               className="w-full flex flex-wrap gap-2 items-center justify-center"
             >
-              {page.data?.items.map((profile) => {
+              {page.map((profile) => {
                 return (
                   <FollowerCard
                     pb={pb}
                     profile_id={profile_id}
                     friend={profile}
                     me={logged_in}
-                    key={profile.id}
+                    key={profile.friendship_id}
                   />
                 );
               })}

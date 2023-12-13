@@ -1,6 +1,8 @@
 export enum CustomPocketbookRoutesEndpoints {
   CustomPocketbookNotificationsCount = "custom_pocketbook_notifications_count",
   CustomPocketbookFriends = "custom_pocketbook_friends",
+  CustomPocketbookFollowers = "custom_pocketbook_followers",
+  CustomPocketbookFollowing = "custom_pocketbook_following",
   CustomPocketbookPosts = "custom_pocketbook_posts",
   OneCustomPocketbookPost = "one_custom_pocketbook_post",
   CustomPocketbookPostReplies = "custom_pocketbook_post_replies",
@@ -79,18 +81,21 @@ export type OneCustomPocketbookPost = {
 
 
 export interface CustomPocketbookFriend {
-  friendship_id: string,
-  friend_avatar:string,
-  friend_username:string,
-  friend_email:string,
-  created: string,
-  updated: string,
-  user_a: string,
-  user_b: string,
-  user_a_follow_user_b: string,
-  user_b_follow_user_a: string,
-  following_me: string,
+  following_me: string
+  user_a_avatar: string
+  user_b_avatar: string
+  friendship_id: string
+  user_a: string
+  user_b_follow_user_a: string
+  user_b_name: string
+  user_a_follow_user_b: string
+  user_b_email: string
+  created: string
+  updated: string
+  user_b: string
   followed_by_me: string
+  user_a_name: string
+  user_a_email: string
 }
 
           // logged_in: c.queryParam("logged_in"),

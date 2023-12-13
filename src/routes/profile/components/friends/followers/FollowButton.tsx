@@ -4,11 +4,12 @@ import {
   PocketbookFriendshipResponse,
   PocketbookUserResponse,
 } from "@/lib/pb/db-types";
-import { shouldFollowUnfollowOrFollowBack } from "@/state/models/friends/frenship";
+import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
+
 
 interface FollowButtonProps {
   pb: PocketBaseClient;
-  friend: PocketbookFriendshipResponse;
+  friend: CustomPocketbookFriend;
   profile_id: string;
   me: PocketbookUserResponse;
 }
@@ -37,23 +38,15 @@ export function FollowButton({
   //     }
   //     return "no";
   //   };
-  interface FollowButtonAction {
-    friend: PocketbookFriendshipResponse;
-    profile_id: string;
-    me: PocketbookUserResponse;
-  }
-const button_action = shouldFollowUnfollowOrFollowBack({
-    frenship: friend,
-    logged_in_id: me.id,
-    profile_id,
-})
+
+
 
   return (
     <div className="w-full h-full flex items-center justify-center">
       {/* <Button> Follow </Button>
       <Button> Follow Back</Button>
       <Button> UnFollow </Button> */}
-      <Button >{button_action.me} {button_action.action}</Button>
+      <Button></Button>
     </div>
   );
 }
