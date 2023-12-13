@@ -2,8 +2,10 @@ import { Button } from "@/components/shadcn/ui/button";
 import { PocketBaseClient } from "@/lib/pb/client";
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation,useQueryClient  } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
+import { toast } from "react-toastify";
+
 
 interface FollowButtonProps {
   pb: PocketBaseClient;
@@ -19,9 +21,10 @@ me,
   pb,
   profile_id,
 }: FollowButtonProps) {
-  const { followed_by_me, following_me } = friend;
+  const { followed_by_me, following_me, friendship_id,  } =
+    friend;
+console.log({followed_by_me, following_me,})
 
-  console.log({ followed_by_me, following_me });
   const am_user_a = me.id === friend.user_a;
   const whatAction = () => {
 
@@ -53,13 +56,34 @@ console.log("action === ",action)
     mutationFn: () => {
       return pb
         .collection("pocketbook_friends")
-        .update(friend.friendship_id, follow_user);
+        .update(friend.friendship_id, unfollow_user);
+    },
+    // onSuccess: () => {
+    //   toast.success("Unfollowed");
+    //   qc.invalidateQueries({ queryKey: ["profile", "followers", "following"] });
+    // },
+    onError: () => {
+      toast.error("Error unfollowing");
+    },
+    meta: {
+      invalidates: ["profile"],
     },
   });
   const follow_mutation = useMutation({
     mutationFn: () => {
-      return pb.collection("pocketbook_friends").update(
-        friend.friendship_id,follow_user);
+      return pb
+        .collection("pocketbook_friends")
+        .update(friend.friendship_id, follow_user);
+    },
+    // onSuccess: () => {
+    //   toast.success("Unfollowed");
+    //   qc.invalidateQueries({ queryKey: ["profile"] });
+    // },
+    onError: () => {
+      toast.error("Error unfollowing");
+    },
+    meta: {
+      invalidates: ["profile"],
     },
   });
   if(action=== "unfollow"){

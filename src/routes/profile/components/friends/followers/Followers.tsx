@@ -2,12 +2,10 @@
 import { QueryVariables, getPbPaginatedFriends } from "@/state/models/friends/custom_friends";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { FollowerCard } from "./FollowerCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
-import { tryCatchWrapper } from "@/utils/helpers/async";
-import { and, or} from "typed-pocketbase";
+import { FriendCard } from "../parts/FriendCard";
 
 interface FollowersProps {
   profile_id: string;
@@ -120,12 +118,13 @@ export function Followers({
             >
               {page.map((profile) => {
                 return (
-                  <FollowerCard
+                  <FriendCard
                     pb={pb}
                     profile_id={profile_id}
                     friend={profile}
                     me={logged_in}
-                    key={profile.friendship_id}
+                    key={
+                    profile.friendship_id  }
                   />
                 );
               })}

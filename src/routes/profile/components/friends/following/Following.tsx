@@ -1,13 +1,11 @@
 "use client";
-import { QueryVariables } from "@/state/models/friends/custom_friends";
+import { QueryVariables, getPbPaginatedFriends } from "@/state/models/friends/custom_friends";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { FollowingCard } from "./FollowingCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
-import { tryCatchWrapper } from "@/utils/helpers/async";
-import { and, or} from "typed-pocketbase";
+import { FriendCard } from "../parts/FriendCard";
 
 interface FollowingProps {
   profile_id: string;
@@ -37,31 +35,19 @@ export function Following({
   const query = useInfiniteQuery({
     queryKey: query_key,
     queryFn: ({ queryKey, pageParam }) =>
-      tryCatchWrapper(
-        pb.collection("pocketbook_friendship").getList(pageParam?.page, 12, {
-          filter: or(
-            and(
-              ["user_a.id", "=", profile_id],
-              ["user_a_follow_user_b", "=", "yes"],
-            ),
-            and(
-              ["user_b.id", "=", profile_id],
-              ["user_b_follow_user_a", "=", "yes"],
-            ),
-          ),
-        }),
-      ),
+      getPbPaginatedFriends(pb, params, pageParam),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.data) {
+      if (lastPage && lastPage[lastPage.length - 1]) {
         return {
-          page: lastPage.data.page + 1,
+          created: lastPage[lastPage?.length - 1]?.created,
+          id: lastPage[lastPage?.length - 1]?.friendship_id,
         };
       }
-
       return;
     },
     initialPageParam: {
-      page: 1,
+      created: currentdate,
+      id: "",
     },
     // enabled:false
   });
@@ -111,14 +97,14 @@ export function Following({
               key={idx}
               className="w-full flex flex-wrap gap-2 items-center justify-center"
             >
-              {page.data?.items.map((profile) => {
+              {page.map((profile) => {
                 return (
-                  <FollowingCard
+                  <FriendCard
                     pb={pb}
                     profile_id={profile_id}
                     friend={profile}
                     me={logged_in}
-                    key={profile.id}
+                    key={profile.friendship_id}
                   />
                 );
               })}

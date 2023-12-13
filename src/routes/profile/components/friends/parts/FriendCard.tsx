@@ -7,80 +7,81 @@ import {  PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Link } from "rakkasjs";
 import { updateFriendship } from "@/state/models/friends/frenship";
 import { isString } from "@/utils/helpers/string";
-import { FollowButton } from "./FollowButton";
 import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
-import { FollowButtons } from "../actions/FollowButtons";
+import { FollowButtons } from "./FollowButtons";
 
 
-interface FollowerCardProps {
+interface FriendCardProps {
   pb: PocketBaseClient;
   friend: CustomPocketbookFriend;
   profile_id: string;
   me: PocketbookUserResponse;
 }
 
-export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) {
+export function FriendCard({ pb, friend, profile_id, me }: FriendCardProps) {
   const followee = friend.user_a === profile_id ? friend.user_b : friend.user_a;
-
+  // console.log({ followed_by_me:friend.followed_by_me, following_me:friend.following_me });
   return (
-    <Link
-      href={`/profile/${followee}`}
+    <div
       className="w-full lg:w-[45%] flex items-center  gap-2 p-2 bg-base-300
       rounded-lg border border-accent shadow "
     >
-      <div className="w-[25%]  h-full flex items-center justify-center rounded-2xl">
-        {friend.user_a === profile_id && (
-          <img
-            src={friend?.user_b_avatar}
-            alt="user image"
-            height={50}
-            width={50}
-            className="rounded-full h-auto  
+      <Link href={`/profile/${followee}`} className="w-full flex hover:brightness-75">
+        <div className="w-[25%]  h-full flex items-center justify-center rounded-2xl">
+          {friend.user_a === profile_id && (
+            <img
+              src={friend?.user_b_avatar}
+              alt="user image"
+              height={50}
+              width={50}
+              className="rounded-full h-auto  
             aspect-square object-cover flex items-center justify-center"
-          />
-        )}
-        {friend.user_b === profile_id && (
-          <img
-            src={friend?.user_a_avatar}
-            alt="user image"
-            height={50}
-            width={50}
-            className="rounded-full h-auto  
+            />
+          )}
+          {friend.user_b === profile_id && (
+            <img
+              src={friend?.user_a_avatar}
+              alt="user image"
+              height={50}
+              width={50}
+              className="rounded-full h-auto  
             aspect-square object-cover flex items-center justify-center"
-          />
-        )}
-      </div>
+            />
+          )}
+        </div>
 
-      <div className="w-full h-full flex flex-col items-cente justify-center text-xs gap-1">
-        {friend.user_a === profile_id && isString(friend?.user_b_name) && (
-          <h1> @{friend.user_b_name}</h1>
-        )}
-        {friend.user_b === profile_id && isString(friend?.user_a_name) && (
-          <h1> @{friend.user_a_name}</h1>
-        )}
+        <div className="w-full h-full flex flex-col items-cente justify-center text-xs gap-1">
+          {friend.user_a === profile_id && isString(friend?.user_b_name) && (
+            <h1> @{friend.user_b_name}</h1>
+          )}
+          {friend.user_b === profile_id && isString(friend?.user_a_name) && (
+            <h1> @{friend.user_a_name}</h1>
+          )}
 
-        {friend.user_a === profile_id && isString(friend?.user_b_email) && (
-          <h2 className="flex gap-2 items-center">
-            <Mail className="h-4 w-4" />
-            {friend.user_b_email}
-          </h2>
-        )}
+          {friend.user_a === profile_id && isString(friend?.user_b_email) && (
+            <h2 className="flex gap-2 items-center">
+              <Mail className="h-4 w-4" />
+              {friend.user_b_email}
+            </h2>
+          )}
 
-        {friend.user_b === profile_id && isString(friend?.user_a_email) && (
-          <h2 className="flex gap-2 items-center">
-            <Mail className="h-4 w-4" />
-            {friend.user_a_email}
-          </h2>
-        )}
+          {friend.user_b === profile_id && isString(friend?.user_a_email) && (
+            <h2 className="flex gap-2 items-center">
+              <Mail className="h-4 w-4" />
+              {friend.user_a_email}
+            </h2>
+          )}
 
-        {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
-      </div>
+          {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
+        </div>
+      </Link>
+
       {/* <div className="text-red-400 hover:bg-accent-foreground">
         <InlineFollowButton pb={pb} friend={friend} me={me} profile_id={profile_id} />
       </div>
       <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/> */}
       <FollowButtons pb={pb} friend={friend} me={me} profile_id={profile_id} />
-    </Link>
+    </div>
   );
 }
 
