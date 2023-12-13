@@ -8,7 +8,8 @@ import { relativeDate } from "@/utils/helpers/date";
 import { ProfileForm } from "@/routes/profile/components/ProfileForm";
 import { Link, usePageContext } from "rakkasjs";
 import { isString } from "@/utils/helpers/string";
-import { ProfileFireindshipButton } from "./friends/profileFireindshipButton";
+import { ProfileFireindshipButton } from "./friends/ProfileFireindshipButton";
+
 
 
 
@@ -21,6 +22,7 @@ export function ProfileUserInfo({
   profile_user,
   logged_in_user,
 }: ProfileUserInfoProps) {
+  console.log({ profile_user, logged_in_user });
   const page_ctx = usePageContext();
   const pb = page_ctx.locals.pb;
   if (profile_user instanceof Error) {
@@ -37,7 +39,7 @@ export function ProfileUserInfo({
           "
     >
       <div className="md:w-[35%] w-[90%] p-2 h-full flex items-center justify-center rounded-2xl">
-        {profile_user.avatar !== "" && (
+        {isString(profile_user.avatar) && (
           <img
             src={profile_user.avatar}
             alt="user image"

@@ -19,6 +19,7 @@ export default function OneProfilePage({params}: PageProps) {
     queryFn: () =>
       tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id,{})),
   });
+  
   const follower_count_key = ["followers", profile_id];
   const following_count_key = ["following", profile_id];
 
@@ -51,14 +52,13 @@ export default function OneProfilePage({params}: PageProps) {
         <h1 className="text-3xl font-bold">Profile</h1>
       </div>
       <div className="w-full ">
-        {profile_user && (
+        {(profile_user && profile_user) && (
           <ProfileUserInfo
             profile_user={profile_user}
             logged_in_user={logged_in}
           />
         )}
       </div>
-
 
       {profile_query.isPending ? (
         <div className="w-full ">loading</div>
