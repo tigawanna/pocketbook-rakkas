@@ -9,6 +9,7 @@ import { updateFriendship } from "@/state/models/friends/frenship";
 import { isString } from "@/utils/helpers/string";
 import { FollowButton } from "./FollowButton";
 import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
+import { FollowButtons } from "../actions/FollowButtons";
 
 
 interface FollowerCardProps {
@@ -19,9 +20,11 @@ interface FollowerCardProps {
 }
 
 export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) {
+  const followee = friend.user_a === profile_id ? friend.user_b : friend.user_a;
+
   return (
     <Link
-      href={`../profile/${friend.friendship_id}`}
+      href={`/profile/${followee}`}
       className="w-full lg:w-[45%] flex items-center  gap-2 p-2 bg-base-300
       rounded-lg border border-accent shadow "
     >
@@ -72,10 +75,11 @@ export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) 
 
         {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
       </div>
-      <div className="text-red-400 hover:bg-accent-foreground">
+      {/* <div className="text-red-400 hover:bg-accent-foreground">
         <InlineFollowButton pb={pb} friend={friend} me={me} profile_id={profile_id} />
       </div>
-      <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/>
+      <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/> */}
+      <FollowButtons pb={pb} friend={friend} me={me} profile_id={profile_id} />
     </Link>
   );
 }

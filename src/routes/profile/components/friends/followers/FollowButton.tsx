@@ -20,6 +20,8 @@ export function FollowButton({
   me,
   pb,
 }: FollowButtonProps) {
+  const {followed_by_me,following_me}= friend
+  console.log({followed_by_me,following_me})
   const am_user_a = me.id === friend.user_a;
   const follow_user = am_user_a
     ? ({ user_a_follow_user_b: "yes" } as const)
@@ -38,7 +40,26 @@ export function FollowButton({
   //     }
   //     return "no";
   //   };
-
+if(followed_by_me==="no" && following_me!=="no"){
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      {/* <Button> Follow </Button>
+      <Button> Follow Back</Button>
+      <Button> UnFollow </Button> */}
+      <Button>Follow back</Button>
+    </div>
+  );
+}
+if(followed_by_me!=="no"){
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      {/* <Button> Follow </Button>
+      <Button> Follow Back</Button>
+      <Button> UnFollow </Button> */}
+      <Button>Unfollow</Button>
+    </div>
+  );
+}
 
 
   return (
@@ -46,7 +67,7 @@ export function FollowButton({
       {/* <Button> Follow </Button>
       <Button> Follow Back</Button>
       <Button> UnFollow </Button> */}
-      <Button></Button>
+      <Button>{}</Button>
     </div>
   );
 }

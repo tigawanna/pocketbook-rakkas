@@ -27,7 +27,7 @@ export function Following({
     limit,
     logged_in: logged_in.id,
     type:"following",
-    user_id: profile_id,
+    profile_id,
   };
 
   const query_key = ["profile",`following`, params];
