@@ -1,14 +1,16 @@
 import { Link } from "rakkasjs";
 import { Home, User2Icon } from "lucide-react";
 import { MiniSettingsModal } from "../mini-settings/MiniSettings";
-import { Icons } from "@/components/icons/Iconts";
+import { useUser } from "@/lib/rakkas/hooks/useUser";
+
 
 interface SidebarProps {}
 
 export function Sidebar({}: SidebarProps) {
+  const {user} = useUser()
   const routes = [
     { name: "home", url: "/", icon: <Home /> },
-    { name: "profile", url: "/profile", icon: <User2Icon /> },
+    { name: "profile", url: "/profile/"+user.id, icon: <User2Icon /> },
   ];
   return (
     <header
@@ -21,7 +23,9 @@ export function Sidebar({}: SidebarProps) {
         </Link>
 
         <div className="flex flex-col gap-3 items-center divide-y-2">
-          {routes.map((route) => (
+          {routes.map((route) => {
+            if(!user && route.name === "profile") return null
+            return (
             <Link
             key={route.name}
               href={route.url}
@@ -35,7 +39,7 @@ export function Sidebar({}: SidebarProps) {
                 {route.name}
               </div>
             </Link>
-          ))}
+          )})}
         </div>
         <MiniSettingsModal />
       </div>

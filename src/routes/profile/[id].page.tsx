@@ -20,8 +20,8 @@ export default function OneProfilePage({params}: PageProps) {
       tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id,{})),
   });
   
-  const follower_count_key = ["followers", profile_id];
-  const following_count_key = ["following", profile_id];
+  const follower_count_key = ["profile","followers", profile_id];
+  const following_count_key = ["profile","following", profile_id];
 
   const count_query = useQueries({
     queries: [
@@ -35,8 +35,19 @@ export default function OneProfilePage({params}: PageProps) {
       },
     ],
   });
+  // const follower_count_query = useQuery({
+  //   queryKey: follower_count_key,
+  //   queryFn: () => tryCatchWrapper(getFollowerscount(pb, profile_id)),
+  // });
+  // const following_count_query = useQuery({
+  //     queryKey: following_count_key,
+  //     queryFn: () => tryCatchWrapper(getFollowingCount(pb, profile_id)),
+  // });
+  
   const followers_count = count_query[0].data?.data ?? 0;
   const following_count = count_query[1].data?.data ?? 0;
+  
+  console.log({followers_count, following_count});
 
   const profile_user = profile_query.data?.data;
   return (

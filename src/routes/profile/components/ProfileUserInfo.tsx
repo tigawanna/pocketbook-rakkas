@@ -22,7 +22,7 @@ export function ProfileUserInfo({
   profile_user,
   logged_in_user,
 }: ProfileUserInfoProps) {
-  console.log({ profile_user, logged_in_user });
+  // console.log({ profile_user, logged_in_user });
   const page_ctx = usePageContext();
   const pb = page_ctx.locals.pb;
   if (profile_user instanceof Error) {

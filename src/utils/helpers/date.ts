@@ -9,6 +9,6 @@ export function relativeDate(date_str: string) {
     const diffInMs = date - now;
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
     const formattedDate = formatter.format(diffInDays, "day");
-    console.log("diffInDays", formattedDate);
+    // console.log("diffInDays", formattedDate);
     return formattedDate;
 }
