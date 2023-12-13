@@ -2,24 +2,22 @@
 import { QueryVariables } from "@/state/models/friends/custom_friends";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { Friend } from "./Friend";
+import { FollowerCard } from "./FollowerCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
 import { tryCatchWrapper } from "@/utils/helpers/async";
-import { or} from "typed-pocketbase";
+import { and, or} from "typed-pocketbase";
 
-interface InfiniteFriendsProps {
+interface FollowersProps {
   profile_id: string;
   limit?: string;
-  type: "following" | "followers";
 }
 
-export function InfiniteFriends({
-  type,
+export function Followers({
   limit = "12",
   profile_id,
-}: InfiniteFriendsProps) {
+}: FollowersProps) {
   const { user: logged_in, pb } = useUser();
   const { ref, inView } = useInView();
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
@@ -28,33 +26,38 @@ export function InfiniteFriends({
     created: currentdate,
     limit,
     logged_in: logged_in.id,
-    type,
+    type:"followers",
     user_id: profile_id,
   };
 
-  const query_key = ["profile",`custom_${type}`, params];
+  const query_key = ["profile",`followers`, params];
+  
+
 
   const query = useInfiniteQuery({
     queryKey: query_key,
     queryFn: ({ queryKey, pageParam }) =>
       tryCatchWrapper(
-        pb
-          .collection("pocketbook_friendship")
-          .getList(pageParam?.page,12,{
-            filter:or(    
-              ["user_a.id", "=",profile_id],
-              ["user_b.id", "=", profile_id]
-          )
-        })
-          
+        pb.collection("pocketbook_friendship").getList(pageParam?.page, 12, {
+          filter: or(
+            and(
+              ["user_a.id", "=", profile_id],
+              ["user_b_follow_user_a", "=", "yes"],
+            ),
+            and(
+              ["user_b.id", "=", profile_id],
+              ["user_a_follow_user_b", "=", "yes"],
+            ),
+          ),
+        }),
       ),
     getNextPageParam: (lastPage, allPages) => {
-      if(lastPage.data){
-      return {
-          page: lastPage.data.page + 1
-        }
+      if (lastPage.data) {
+        return {
+          page: lastPage.data.page + 1,
+        };
       }
-  
+
       return;
     },
     initialPageParam: {
@@ -110,7 +113,7 @@ export function InfiniteFriends({
             >
               {page.data?.items.map((profile) => {
                 return (
-                  <Friend
+                  <FollowerCard
                     pb={pb}
                     profile_id={profile_id}
                     friend={profile}

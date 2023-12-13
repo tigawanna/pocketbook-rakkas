@@ -1,9 +1,9 @@
 "use client";
 import { SidePanel } from "@/components/posts/timeline/SidePanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/shadcn/ui/tabs";
-import { PBUserRecord } from "@/state/models/user/types";
-import { InfiniteFriends } from "./friends/InfiniteFriends";
 import { RootTimeline } from "@/components/posts/timeline/RootTimeline";
+import { Followers } from "./friends/followers/Followers";
+import { Following } from "./friends/following/Following";
 
 interface ProfileTabsProps {
 profile_id:string; 
@@ -16,6 +16,7 @@ export function ProfileTabs({
   followers_count,
   following_count
 }: ProfileTabsProps) {
+
   return (
     <Tabs defaultValue="posts" className="w-[95%] max-h-screen">
       <TabsList className="w-[95%] flex sticky top-[6%] z-50 bg-base-200">
@@ -43,11 +44,11 @@ export function ProfileTabs({
       </TabsContent>
 
       <TabsContent value="followers">
-        <InfiniteFriends type={"followers"} profile_id={profile_id} />
+        <Followers  profile_id={profile_id} />
       </TabsContent>
 
       <TabsContent value="following">
-        <InfiniteFriends type={"following"} profile_id={profile_id} />
+        <Following  profile_id={profile_id} />
       </TabsContent>
     </Tabs>
   );

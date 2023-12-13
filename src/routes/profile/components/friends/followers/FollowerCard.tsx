@@ -3,21 +3,21 @@ import { useMutation } from "@tanstack/react-query";
 import AsyncButton from "@/components/wrappers/AsyncButton";
 import { useState } from "react";
 import { PocketBaseClient } from "@/lib/pb/client";
-import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
-import { PocketbookFriendsResponse, PocketbookFriendshipResponse, PocketbookUserResponse } from "@/lib/pb/db-types";
+import {  PocketbookFriendshipResponse, PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Link } from "rakkasjs";
 import { updateFriendship } from "@/state/models/friends/frenship";
 import { isString } from "@/utils/helpers/string";
+import { FollowButton } from "./FollowButton";
 
 
-interface FriendProps {
+interface FollowerCardProps {
   pb:PocketBaseClient
   friend:PocketbookFriendshipResponse;
   profile_id:string;
   me: PocketbookUserResponse;
 }
 
-export function Friend({ pb,friend,profile_id, me }: FriendProps) {
+export function FollowerCard({ pb, friend, profile_id, me }: FollowerCardProps) {
   return (
     <Link
       href={`../profile/${friend.id}`}
@@ -27,7 +27,7 @@ export function Friend({ pb,friend,profile_id, me }: FriendProps) {
       <div className="w-[25%]  h-full flex items-center justify-center rounded-2xl">
         {friend.user_a === profile_id && (
           <img
-            src={friend.user_a_avatar}
+            src={friend?.user_b_avatar}
             alt="user image"
             height={50}
             width={50}
@@ -37,7 +37,7 @@ export function Friend({ pb,friend,profile_id, me }: FriendProps) {
         )}
         {friend.user_b === profile_id && (
           <img
-            src={friend.user_b_avatar}
+            src={friend?.user_a_avatar}
             alt="user image"
             height={50}
             width={50}
@@ -48,28 +48,33 @@ export function Friend({ pb,friend,profile_id, me }: FriendProps) {
       </div>
 
       <div className="w-full h-full flex flex-col items-cente justify-center text-xs gap-1">
-        {(friend.user_a === profile_id && isString(friend.user_a_name) )&& <h1> @{friend.user_a_name}</h1>}
-        {(friend.user_b === profile_id&&isString(friend.user_b_name)) && <h1> @{friend.user_b_name}</h1>}
-
-        {friend.user_a === profile_id&&isString(friend.user_a_email) && (
-          <h2 className="flex gap-2 items-center">
-            <Mail className="h-4 w-4" />
-            {friend.user_a_email}
-          </h2>
+        {friend.user_a === profile_id && isString(friend?.user_b_name) && (
+          <h1> @{friend.user_b_name}</h1>
+        )}
+        {friend.user_b === profile_id && isString(friend?.user_a_name) && (
+          <h1> @{friend.user_a_name}</h1>
         )}
 
-        {friend.user_b === profile_id&&isString(friend.user_b_email) && (
+        {friend.user_a === profile_id && isString(friend?.user_b_email) && (
           <h2 className="flex gap-2 items-center">
             <Mail className="h-4 w-4" />
             {friend.user_b_email}
           </h2>
         )}
 
+        {friend.user_b === profile_id && isString(friend?.user_a_email) && (
+          <h2 className="flex gap-2 items-center">
+            <Mail className="h-4 w-4" />
+            {friend.user_a_email}
+          </h2>
+        )}
+
         {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
       </div>
       <div className="text-red-400 hover:bg-accent-foreground">
-        <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/>
+        <InlineFollowButton pb={pb} friend={friend} me={me} profile_id={profile_id} />
       </div>
+      <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/>
     </Link>
   );
 }
@@ -81,7 +86,7 @@ interface FollowButtonProps {
   me: PocketbookUserResponse;
 }
 
-export function FollowButton({ pb,friend, me,profile_id }: FollowButtonProps) {
+export function InlineFollowButton({ pb,friend, me,profile_id }: FollowButtonProps) {
   type UseMutReturn = Awaited<ReturnType<typeof updateFriendship>>;
   type UseMutParams = Awaited<Parameters<typeof updateFriendship>>[0];
 
@@ -93,7 +98,7 @@ export function FollowButton({ pb,friend, me,profile_id }: FollowButtonProps) {
   >({
     mutationFn: (vars) => updateFriendship(vars),
     meta: {
-      invalidates: ["profile","custom_follower", "custom_following"],
+      invalidates: ["profile","followers", "following"],
     },
   });
 

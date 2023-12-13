@@ -18,31 +18,34 @@ export function shouldFollowUnfollowOrFollowBack({
 }: ShouldFollowUnfollowOrFollowBackProps) {
   const { user_a, user_b, user_a_follow_user_b, user_b_follow_user_a } =
     frenship;
-
-  if (user_a === logged_in_id && user_b === profile_id) {
-    if (user_a_follow_user_b === "yes") {
-      return { me: "user_a", action: "unfollow" } as const;
-    } else if (
-      user_b_follow_user_a === "yes" &&
-      user_a_follow_user_b === "no"
-    ) {
+console.log(profile_id,{
+  user_a, user_b, user_a_follow_user_b, user_b_follow_user_a
+})
+//  logged in user is user A
+  if (user_a === profile_id) {
+   
+    if (user_b_follow_user_a === "yes" && user_a_follow_user_b === "no") {
+      console.log("user a : they're following me but am not following them , FOLLOW BACK")
       return { me: "user_a", action: "follow_back" } as const;
-    } else {
-      return { me: "user_a", action: "follow" } as const;
     }
+    if (user_a_follow_user_b === "yes") {
+      console.log("user a: am following them , UNFOLLOW")
+      return { me: "user_a", action: "unfollow" } as const;
+    }
+    console.log("user a: undertermined state")
+  return { me: "user_a", action: "follow" } as const;
   }
+  //  logged in user is user B
   if (user_b === logged_in_id && user_a === profile_id) {
+    if (user_a_follow_user_b === "yes" && user_b_follow_user_a === "no") {
+      return { me: "user_b", action: "follow_back" } as const;
+    }
     if (user_b_follow_user_a === "yes") {
       return { me: "user_b", action: "unfollow" } as const;
-    } else if (
-      user_a_follow_user_b === "yes" &&
-      user_b_follow_user_a === "no"
-    ) {
-      return { me: "user_b", action: "follow_back" } as const;
-    } else {
-      return { me: "user_b", action: "follow" } as const;
     }
+    return { me: "user_b", action: "follow" } as const;
   }
+
   return { me: "user_a", action: "follow" } as const;
 }
 
