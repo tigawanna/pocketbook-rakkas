@@ -1,75 +1,70 @@
 "use client";
-import { QueryVariables, getPbPaginatedFriends } from "@/state/models/friends/custom_friends";
+import { QueryVariables } from "@/state/models/friends/custom_friends";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import {  FriendCard } from "./FriendCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
-import { FriendCard } from "../parts/FriendCard";
+import { tryCatchWrapper } from "@/utils/helpers/async";
+import { or, and } from "typed-pocketbase";
 
-interface FollowersProps {
+interface InfiniteFriendsProps {
   profile_id: string;
   limit?: string;
+  type: "following" | "followers";
 }
 
-export function Followers({
+export function InfiniteFriends({
+  type,
   limit = "12",
   profile_id,
-}: FollowersProps) {
+}: InfiniteFriendsProps) {
   const { user: logged_in, pb } = useUser();
   const { ref, inView } = useInView();
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const params: QueryVariables = {
-    profile_id,
     created: currentdate,
     limit,
     logged_in: logged_in.id,
-    type:"followers",
+    type,
+    profile_id,
   };
 
-  const query_key = ["profile",`followers`, params];
-  
+  const query_key = ["profile", `custom_${type}`, params];
+
+  const following_filter = or(
+    and(["user_a.id", "=", profile_id], ["user_a_follow_user_b", "=", "yes"]),
+    and(["user_b.id", "=", profile_id], ["user_b_follow_user_a", "=", "yes"]),
+  );
+  const followers_filter = or(
+    and(["user_a.id", "=", profile_id], ["user_b_follow_user_a", "=", "yes"]),
+    and(["user_b.id", "=", profile_id], ["user_a_follow_user_b", "=", "yes"]),
+  );
+
   const query = useInfiniteQuery({
     queryKey: query_key,
     queryFn: ({ queryKey, pageParam }) =>
-      getPbPaginatedFriends(pb, params, pageParam),
+      tryCatchWrapper(
+        pb.collection("pocketbook_friendship").getList(pageParam.page, 12,{
+          // @ts-expect-error
+          filter: type === "following" ? following_filter : followers_filter,
+        }),
+      ),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage && lastPage[lastPage.length - 1]) {
+      if (lastPage.data?.page) {
         return {
-          created: lastPage[lastPage?.length - 1]?.created,
-          id: lastPage[lastPage?.length - 1]?.friendship_id,
+          page: lastPage.data?.page + 1,
         };
       }
       return;
     },
     initialPageParam: {
-      created: currentdate,
-      id: "",
+      page: 1,
     },
     // enabled:false
   });
-
-  // const query = useInfiniteQuery({
-  //   queryKey: query_key,
-  //   queryFn: ({ queryKey, pageParam }) =>
-  //     tryCatchWrapper(
-  //       pb.send()
-  //     ),
-  //   getNextPageParam: (lastPage, allPages) => {
-  //     if (lastPage.data) {
-  //       return {
-  //         page: lastPage.data.page + 1,
-  //       };
-  //     }
-
-  //     return;
-  //   },
-  //   initialPageParam: {
-  //     page: 1,
-  //   },
-  //   // enabled:false
-  // });
 
   useEffect(() => {
     if (inView) {
@@ -79,7 +74,7 @@ export function Followers({
 
   //   if (query.isPending) {
   //     return (
-  //       <div className="w-full h-full flex flex-col items-center justify-center bg-red-900 text-red-300 rounded-lg p-5">
+  //       <div className="w-full h-full flex flex-col items-center justify-center rounded-lg p-5">
   //         loading following
   //       </div>
   //     );
@@ -116,15 +111,15 @@ export function Followers({
               key={idx}
               className="w-full flex flex-wrap gap-2 items-center justify-center"
             >
-              {page.map((profile) => {
+              {page.data?.items?.map((profile) => {
+                // console.log("profile === ",profile)
                 return (
                   <FriendCard
                     pb={pb}
-                    profile_id={profile_id}
                     friend={profile}
                     me={logged_in}
-                    key={
-                    profile.friendship_id  }
+                    key={profile.id}
+                    profile_id={profile_id}
                   />
                 );
               })}

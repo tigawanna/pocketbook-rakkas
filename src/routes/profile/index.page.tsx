@@ -10,18 +10,17 @@ import {
   getFollowingCount,
 } from "@/state/models/friends/friends";
 
-export default function ProfilePage({  }: PageProps) {
+export default function OneProfilePage({ params }: PageProps) {
   const { user: logged_in, pb } = useUser();
   const profile_id = logged_in.id;
-
   const profile_query = useQuery({
     queryKey: ["profile", profile_id],
     queryFn: () =>
       tryCatchWrapper(pb.collection("pocketbook_user").getOne(profile_id, {})),
   });
 
-  const follower_count_key = ["profile","followers", profile_id];
-  const following_count_key = ["profile","following", profile_id];
+  const follower_count_key = ["profile", "followers", profile_id];
+  const following_count_key = ["profile", "following", profile_id];
 
   const count_query = useQueries({
     queries: [
@@ -35,14 +34,24 @@ export default function ProfilePage({  }: PageProps) {
       },
     ],
   });
+  // const follower_count_query = useQuery({
+  //   queryKey: follower_count_key,
+  //   queryFn: () => tryCatchWrapper(getFollowerscount(pb, profile_id)),
+  // });
+  // const following_count_query = useQuery({
+  //     queryKey: following_count_key,
+  //     queryFn: () => tryCatchWrapper(getFollowingCount(pb, profile_id)),
+  // });
+
   const followers_count = count_query[0].data?.data ?? 0;
   const following_count = count_query[1].data?.data ?? 0;
 
-  const profile_user = profile_query.data?.data;
+  console.log({ followers_count, following_count });
 
+  const profile_user = profile_query.data?.data;
   return (
-    <div className="w-full flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll">
-      <div className="w-full  flex gap-2 items-center sticky top-0 z-50 ">
+    <div className="w-full flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll p-2">
+      <div className="w-[95%]  flex gap-2 items-center sticky top-0 z-50 ">
         {/* <Link href="-1"> */}
         <ChevronLeft
           onClick={() => history?.back()}
@@ -52,18 +61,14 @@ export default function ProfilePage({  }: PageProps) {
         {/* </Link> */}
         <h1 className="text-3xl font-bold">Profile</h1>
       </div>
-      {profile_query.isPending ? (
-        <div className="w-full ">loading</div>
-      ) : (
-        <div className="w-full ">
-          {profile_user && profile_user && (
-            <ProfileUserInfo
-              profile_user={profile_user}
-              logged_in_user={logged_in}
-            />
-          )}
-        </div>
-      )}
+      <div className="w-full ">
+        {profile_user && profile_user && (
+          <ProfileUserInfo
+            profile_user={profile_user}
+            logged_in_user={logged_in}
+          />
+        )}
+      </div>
 
       {profile_query.isPending ? (
         <div className="w-full ">loading</div>

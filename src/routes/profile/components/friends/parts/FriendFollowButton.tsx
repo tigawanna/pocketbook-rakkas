@@ -10,19 +10,19 @@ import { Loader } from "lucide-react";
 import { toast } from "react-toastify";
 import { and, or } from "typed-pocketbase";
 
-interface WaterfalssFollowButtonProps {
+interface FriendFollowButtonProps {
   pb: PocketBaseClient;
   friend: PocketbookFriendshipResponse;
   profile_id: string;
   me: PocketbookUserResponse;
 }
 
-export function WaterfallssFollowButton({
+export function FriendFollowButton({
   friend,
   me,
   profile_id,
   pb,
-}: WaterfalssFollowButtonProps) {
+}: FriendFollowButtonProps) {
   const friend_button_key = [
     "profile",
     "friendship",

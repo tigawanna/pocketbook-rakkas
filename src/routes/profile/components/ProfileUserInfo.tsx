@@ -1,14 +1,15 @@
 import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
-import { Button } from "@/components/shadcn/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
 import { PocketbookFriendshipResponse, PocketbookUserResponse } from "@/lib/pb/db-types";
 import { Icons } from "@/components/icons/Iconts";
 import { DialogWrapper } from "@/components/pocketbook/dialog/DialodWrapper";
 import { relativeDate } from "@/utils/helpers/date";
 import { ProfileForm } from "@/routes/profile/components/ProfileForm";
-import { Link, usePageContext } from "rakkasjs";
+import { Link } from "rakkasjs";
 import { isString } from "@/utils/helpers/string";
-import { ProfileFireindshipButton } from "./friends/ProfileFireindshipButton";
+import { useUser } from "@/lib/rakkas/hooks/useUser";
+import { ProfileFollowButton } from "./friends/parts/ProfileFollowButton";
+
 
 
 
@@ -23,8 +24,8 @@ export function ProfileUserInfo({
   logged_in_user,
 }: ProfileUserInfoProps) {
   // console.log({ profile_user, logged_in_user });
-  const page_ctx = usePageContext();
-  const pb = page_ctx.locals.pb;
+
+  const {pb,user} = useUser()
   if (profile_user instanceof Error) {
     return (
       <div className="min-h-screen h-full w-full flex items-center justify-center">
@@ -74,14 +75,16 @@ export function ProfileUserInfo({
         {isString(profile_user.bio) && (
           <p className="border-t my-1 py-2 ">bio: {profile_user.bio}</p>
         )}
-        <p className="border-t my-1 py-2 ">{profile_user.id}</p>
+        {import.meta.env.DEV && (
+          <p className="border-t my-1 py-2 ">{profile_user.id}</p>
+        )}
       </div>
       {profile_user && profile_user.id === logged_in_user.id ? (
         <DialogWrapper>
           <ProfileForm user={profile_user} />
         </DialogWrapper>
       ) : (
-        <ProfileFireindshipButton profile_user={profile_user} />
+        <ProfileFollowButton friend={profile_user}/>
         // <FollowButton pb={pb} friend={profile_user} me={logged_in_user} />
       )}
     </div>

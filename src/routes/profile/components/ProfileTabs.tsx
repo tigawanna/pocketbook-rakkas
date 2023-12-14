@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/shadcn/ui
 import { RootTimeline } from "@/components/posts/timeline/RootTimeline";
 import { Followers } from "./friends/followers/Followers";
 import { Following } from "./friends/following/Following";
-import { InfiniteFriends } from "./friends/waterfalls/InfiniteFriends";
+import { InfiniteFriends } from "./friends/parts/InfiniteFriends";
 
 
 interface ProfileTabsProps {
