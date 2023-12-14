@@ -4,6 +4,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/shadcn/ui
 import { RootTimeline } from "@/components/posts/timeline/RootTimeline";
 import { Followers } from "./friends/followers/Followers";
 import { Following } from "./friends/following/Following";
+import { InfiniteFriends } from "./friends/waterfalls/InfiniteFriends";
+
 
 interface ProfileTabsProps {
 profile_id:string; 
@@ -44,11 +46,13 @@ export function ProfileTabs({
       </TabsContent>
 
       <TabsContent value="followers">
-        <Followers  profile_id={profile_id} />
+        {/* <Followers  profile_id={profile_id} /> */}
+        <InfiniteFriends profile_id={profile_id} type="followers" />
       </TabsContent>
 
       <TabsContent value="following">
-        <Following  profile_id={profile_id} />
+        {/* <Following  profile_id={profile_id} /> */}
+        <InfiniteFriends profile_id={profile_id} type="following" />
       </TabsContent>
     </Tabs>
   );
