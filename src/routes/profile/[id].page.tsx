@@ -47,7 +47,7 @@ export default function OneProfilePage({params}: PageProps) {
   const followers_count = count_query[0].data?.data ?? 0;
   const following_count = count_query[1].data?.data ?? 0;
   
-  console.log({followers_count, following_count});
+  // console.log({followers_count, following_count});
 
   const profile_user = profile_query.data?.data;
   return (

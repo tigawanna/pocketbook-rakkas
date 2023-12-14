@@ -8,7 +8,7 @@ import { ProfileForm } from "@/routes/profile/components/ProfileForm";
 import { Link } from "rakkasjs";
 import { isString } from "@/utils/helpers/string";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
-import { ProfileFollowButton } from "./friends/parts/ProfileFollowButton";
+import { ProfileFollowButton } from "./friends/ProfileFollowButton";
 
 
 
