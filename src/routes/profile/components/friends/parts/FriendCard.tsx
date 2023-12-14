@@ -11,6 +11,7 @@ import { CustomPocketbookFriend } from "@/lib/pb/models/custom_routes/types";
 import { FollowButtons } from "./FollowButtons";
 
 
+
 interface FriendCardProps {
   pb: PocketBaseClient;
   friend: CustomPocketbookFriend;
@@ -23,64 +24,74 @@ export function FriendCard({ pb, friend, profile_id, me }: FriendCardProps) {
   // console.log({ followed_by_me:friend.followed_by_me, following_me:friend.following_me });
   return (
     <div
-      className="w-full lg:w-[45%] flex items-center  gap-2 p-2 bg-base-300
+      className="w-full xlg:w-[45%] flex flex-col items-center  gap-2 p-2 bg-base-300
       rounded-lg border border-accent shadow "
     >
-      <Link href={`/profile/${followee}`} className="w-full flex hover:brightness-75">
-        <div className="w-[25%]  h-full flex items-center justify-center rounded-2xl">
-          {friend.user_a === profile_id && (
-            <img
-              src={friend?.user_b_avatar}
-              alt="user image"
-              height={50}
-              width={50}
-              className="rounded-full h-auto  
+      <div className="w-[25%]  h-full flex items-center justify-center rounded-2xl">
+        {friend.user_a === profile_id && (
+          <img
+            src={friend?.user_b_avatar}
+            alt="user image"
+            height={50}
+            width={50}
+            className="rounded-full h-auto  
             aspect-square object-cover flex items-center justify-center"
-            />
-          )}
-          {friend.user_b === profile_id && (
-            <img
-              src={friend?.user_a_avatar}
-              alt="user image"
-              height={50}
-              width={50}
-              className="rounded-full h-auto  
+          />
+        )}
+        {friend.user_b === profile_id && (
+          <img
+            src={friend?.user_a_avatar}
+            alt="user image"
+            height={50}
+            width={50}
+            className="rounded-full h-auto  
             aspect-square object-cover flex items-center justify-center"
-            />
-          )}
-        </div>
+          />
+        )}
+      </div>
 
-        <div className="w-full h-full flex flex-col items-cente justify-center text-xs gap-1">
-          {friend.user_a === profile_id && isString(friend?.user_b_name) && (
-            <h1> @{friend.user_b_name}</h1>
-          )}
-          {friend.user_b === profile_id && isString(friend?.user_a_name) && (
-            <h1> @{friend.user_a_name}</h1>
-          )}
+      <div className="w-full h-full flex flex-col items-cente justify-center text-xs gap-1">
+        {friend.user_a === profile_id && isString(friend?.user_b_name) && (
+          <h1> @{friend.user_b_name}</h1>
+        )}
+        {friend.user_b === profile_id && isString(friend?.user_a_name) && (
+          <h1> @{friend.user_a_name}</h1>
+        )}
 
-          {friend.user_a === profile_id && isString(friend?.user_b_email) && (
-            <h2 className="flex gap-2 items-center">
-              <Mail className="h-4 w-4" />
-              {friend.user_b_email}
-            </h2>
-          )}
+        {friend.user_a === profile_id && isString(friend?.user_b_email) && (
+          <h2 className="flex gap-2 items-center">
+            <Mail className="h-4 w-4" />
+            {friend.user_b_email}
+          </h2>
+        )}
 
-          {friend.user_b === profile_id && isString(friend?.user_a_email) && (
-            <h2 className="flex gap-2 items-center">
-              <Mail className="h-4 w-4" />
-              {friend.user_a_email}
-            </h2>
-          )}
+        {friend.user_b === profile_id && isString(friend?.user_a_email) && (
+          <h2 className="flex gap-2 items-center">
+            <Mail className="h-4 w-4" />
+            {friend.user_a_email}
+          </h2>
+        )}
+        {friend.user_a === profile_id && isString(friend?.user_b_name) && (
+          <h1> # {friend.user_b}</h1>
+        )}
+        {friend.user_b === profile_id && isString(friend?.user_a_name) && (
+          <h1> # {friend.user_a}</h1>
+        )}
 
-          {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
-        </div>
-      </Link>
+        {/* <h2>joined: {relativeDate(profile.created)}</h2> */}
+      </div>
 
       {/* <div className="text-red-400 hover:bg-accent-foreground">
         <InlineFollowButton pb={pb} friend={friend} me={me} profile_id={profile_id} />
       </div>
       <FollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/> */}
+      <>{JSON.stringify(friend, null, 2)}</>
+      <Link
+        href={`/profile/${followee}`}
+        className="w-full flex hover:bg-base-200"
+      >view</Link>
       <FollowButtons pb={pb} friend={friend} me={me} profile_id={profile_id} />
+      {/* <WaterfallssFollowButton pb={pb} friend={friend} me={me} profile_id={profile_id}/> */}
     </div>
   );
 }

@@ -21,18 +21,21 @@ me,
   pb,
   profile_id,
 }: FollowButtonProps) {
-  const { followed_by_me, following_me, friendship_id,  } =
-    friend;
-console.log({followed_by_me, following_me,})
+  const { followed_by_me, following_me, friendship_exists,friendship_id  } = friend;
+  console.log({followed_by_me, following_me,friendship_exists,friendship_id})
 
-  const am_user_a = me.id === friend.user_a;
+  const am_user_a = profile_id === friend.user_a;
   const whatAction = () => {
 
-      if(followed_by_me ==="no" && following_me !== "no"){
-        return "follow_back"
+      if (
+        followed_by_me === "no" &&
+        following_me !== "no" &&
+        friendship_exists !== "no"
+      ) {
+        return "follow_back";
       }
-      if(followed_by_me !== "no"){
-        return "unfollow"
+      if (followed_by_me !== "no" && friendship_exists !== "no") {
+        return "unfollow";
       }
       if(followed_by_me === "no"){
         return "follow"
@@ -42,6 +45,17 @@ console.log({followed_by_me, following_me,})
     
 
   };
+    const create_follow_user = am_user_a
+      ? ({
+          user_a: me.id,
+          user_b: friend.user_b,
+          user_a_follow_user_b: "yes",
+        } as const)
+      : ({
+          user_a: me.id,
+          user_b: friend.user_a,
+          user_a_follow_user_b: "yes",
+        } as const);
   const follow_user = am_user_a
     ? ({ user_a_follow_user_b: "yes" } as const)
     : ({ user_b_follow_user_a: "yes" } as const);
@@ -51,17 +65,16 @@ console.log({followed_by_me, following_me,})
     : ({ user_b_follow_user_a: "no" } as const);
 
 const action = whatAction()
-console.log("action === ",action)
+// console.log("action === ",action)
   const unfollow_mutation = useMutation({
     mutationFn: () => {
       return pb
         .collection("pocketbook_friends")
         .update(friend.friendship_id, unfollow_user);
     },
-    // onSuccess: () => {
-    //   toast.success("Unfollowed");
-    //   qc.invalidateQueries({ queryKey: ["profile", "followers", "following"] });
-    // },
+    onSuccess: (data) => {
+      console.log({data})
+    },
     onError: () => {
       toast.error("Error unfollowing");
     },
@@ -71,14 +84,14 @@ console.log("action === ",action)
   });
   const follow_mutation = useMutation({
     mutationFn: () => {
+      // console.log("create_follow_user", create_follow_user);
       return pb
         .collection("pocketbook_friends")
-        .update(friend.friendship_id, follow_user);
+        .update(friendship_exists, follow_user);
     },
-    // onSuccess: () => {
-    //   toast.success("Unfollowed");
-    //   qc.invalidateQueries({ queryKey: ["profile"] });
-    // },
+    onSuccess: (data) => {
+      console.log({ data, friendship_exists });
+    },
     onError: () => {
       toast.error("Error unfollowing");
     },
@@ -86,6 +99,26 @@ console.log("action === ",action)
       invalidates: ["profile"],
     },
   });
+  const create_follow_mutation = useMutation({
+    mutationFn: () => {
+      return pb
+        .collection("pocketbook_friends")
+        .create(create_follow_user);
+    },
+    onError: () => {
+      toast.error("Error creating follow");
+    },
+    meta: {
+      invalidates: ["profile"],
+    },
+  });
+  if(action=== "follow" && friendship_exists ==="no"){
+    return (
+      <Button onClick={() => create_follow_mutation.mutate()} className="text-green-500">
+        Follow {unfollow_mutation.isPending && <Loader className="animate-spin" />}
+      </Button>
+    );
+  }
   if(action=== "unfollow"){
     return (
       <Button onClick={() => unfollow_mutation.mutate()}>

@@ -81,10 +81,12 @@ export type OneCustomPocketbookPost = {
 
 
 export interface CustomPocketbookFriend {
-  following_me: string
   user_a_avatar: string
   user_b_avatar: string
   friendship_id: string
+  friendship_exists:string & {} | "no"
+  following_me: "yes" | "no"
+  followed_by_me: "yes"|"no"
   user_a: string
   user_b_follow_user_a: string
   user_b_name: string
@@ -93,7 +95,6 @@ export interface CustomPocketbookFriend {
   created: string
   updated: string
   user_b: string
-  followed_by_me: string
   user_a_name: string
   user_a_email: string
 }
