@@ -3,12 +3,14 @@ import { ProfileUserInfo } from "./components/ProfileUserInfo";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { tryCatchWrapper } from "@/utils/helpers/async";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ExternalLink, Mail } from "lucide-react";
 import { ProfileTabs } from "./components/ProfileTabs";
 import {
   getFollowerscount,
   getFollowingCount,
 } from "@/state/models/friends/friends";
+import { Icons } from "@/components/icons/Iconts";
+import { ProfileInfoLoader } from "./components/loaders/ProfileInfoloader";
 
 
 export default function OneProfilePage({params}: PageProps) {
@@ -35,14 +37,7 @@ export default function OneProfilePage({params}: PageProps) {
       },
     ],
   });
-  // const follower_count_query = useQuery({
-  //   queryKey: follower_count_key,
-  //   queryFn: () => tryCatchWrapper(getFollowerscount(pb, profile_id)),
-  // });
-  // const following_count_query = useQuery({
-  //     queryKey: following_count_key,
-  //     queryFn: () => tryCatchWrapper(getFollowingCount(pb, profile_id)),
-  // });
+
   
   const followers_count = count_query[0].data?.data ?? 0;
   const following_count = count_query[1].data?.data ?? 0;
@@ -51,7 +46,8 @@ export default function OneProfilePage({params}: PageProps) {
 
   const profile_user = profile_query.data?.data;
   return (
-    <div className="w-full flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll p-2">
+    <div className="flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll p-2 ml-5 
+    overflow-x-clip">
       <div className="w-[95%]  flex gap-2 items-center sticky top-0 z-50 ">
         {/* <Link href="-1"> */}
         <ChevronLeft
@@ -62,7 +58,10 @@ export default function OneProfilePage({params}: PageProps) {
         {/* </Link> */}
         <h1 className="text-3xl font-bold">Profile</h1>
       </div>
-      <div className="w-full ">
+   
+   {(profile_query.isPending) ? 
+   <ProfileInfoLoader/>
+   :(<div className="w-full ">
         {(profile_user && profile_user) && (
           <ProfileUserInfo
             profile_user={profile_user}
@@ -70,16 +69,17 @@ export default function OneProfilePage({params}: PageProps) {
           />
         )}
       </div>
+      )}
 
-      {profile_query.isPending ? (
-        <div className="w-full ">loading</div>
-      ) : (
+
         <ProfileTabs
           profile_id={profile_id}
           followers_count={followers_count}
           following_count={following_count}
         />
-      )}
+      
     </div>
   );
 }
+
+

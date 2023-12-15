@@ -50,12 +50,13 @@ export const PostsCard = ({
   profile_url.searchParams.forEach((value, key) => {
     profile_url.searchParams.delete(key);
   })
+  
   // profile_url.searchParams.set("id", item?.creator_id);
-
   // console.log({ item });
 
   const post_params = ` post_description=${item?.post_body}
   &post_author=${item?.creator_name}&depth=${item?.post_depth + 1}`;
+
   const card_styles = twMerge(
     `w-full h-full p-1 flex flex-col hover:shadow-sm hover:shadow-accent-foreground
     border shadow-secondary-foreground shadow rounded-md`,
