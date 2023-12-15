@@ -23,7 +23,7 @@ export type CustomPocketbookPost = {
   post_body: string;
   post_media: string;
   post_parent: string;
-  post_depth: number;
+  post_depth: string;
   created_at: string;
   likes: string;
   reaction_id: string;

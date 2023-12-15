@@ -16,7 +16,7 @@ import { CustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
 interface PostMutationDialogProps {
   label?: string;
   icon: React.ReactNode;
-  depth?: number;
+  depth: number;
   parent?: string;
   user?: PocketbookUserResponse;
   custom_post?: CustomPocketbookPost;
@@ -31,6 +31,7 @@ export function PostMutationDialog({
   parent,
 }: PostMutationDialogProps) {
   const [open, setOpen] = useState<boolean | undefined>(undefined);
+
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>{icon}</DialogTrigger>

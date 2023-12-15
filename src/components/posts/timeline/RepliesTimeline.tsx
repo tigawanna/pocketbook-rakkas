@@ -25,7 +25,7 @@ interface RepliesTimelineProps {
 export function RepliesTimeline({
   depth,
   parent,
-  limit = 6,
+  limit = 12,
 }: RepliesTimelineProps) {
   const { ref, inView } = useInView();
   const { user } = useUser();
@@ -35,7 +35,7 @@ export function RepliesTimeline({
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const customPostsQuery = useInfiniteQuery({
-    queryKey: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
+    queryKey: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts, parent,depth],
     queryFn: ({ queryKey, pageParam }) =>
       tryCatchWrapper(
         getCustomPocketbookPostReplies({
@@ -169,6 +169,7 @@ export function RepliesTimeline({
       >
         <PostMutationDialog
           user={user}
+          depth={depth+1}
           icon={
             <Plus
               className="h-12 w-12 p-1 rounded-full border-2 hover:border-accent-foreground

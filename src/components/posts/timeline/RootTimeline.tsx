@@ -29,7 +29,7 @@ export function RootTimeline({ profile = "general" }: RootTimelineProps) {
   const currentdate = dayjs(new Date()).format("YYYY-MM-DDTHH:mm:ssZ[Z]");
 
   const customPostsQuery = useInfiniteQuery({
-    queryKey: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
+    queryKey: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts,profile],
     queryFn: ({ queryKey, pageParam }) =>
       tryCatchWrapper(
         getCustomPocketbookPosts({
@@ -189,6 +189,7 @@ export function RootTimeline({ profile = "general" }: RootTimelineProps) {
         className="fixed bottom-16 right-[3%]"
       >
         <PostMutationDialog
+          depth={0}
           user={user}
           icon={
             <Plus

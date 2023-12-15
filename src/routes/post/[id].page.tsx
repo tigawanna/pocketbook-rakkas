@@ -56,6 +56,7 @@ export default function OnePostPage({ params, url }: PageProps) {
               item={one_post}
               is_reply={false}
               user={user}
+              list_item={false}
             />
           )}
         </div>

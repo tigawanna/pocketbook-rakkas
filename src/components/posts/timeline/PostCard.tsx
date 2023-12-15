@@ -19,6 +19,7 @@ interface PostCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: CustomPocketbookPost;
   user?: PocketbookUserResponse;
   is_reply: boolean;
+  list_item?: boolean;
 }
 
 export const PostsCard = ({
@@ -26,6 +27,7 @@ export const PostsCard = ({
   item,
   user,
   is_reply,
+  list_item = true,
   ...props
 }: PostCardProps) => {
   const post_img_url = getFileURL({
@@ -33,29 +35,19 @@ export const PostsCard = ({
     record_id: item?.post_id,
     file_name: item?.post_media,
   });
-
-  //   const one_post_url= new URL(pathname)
-  //  one_post_url.searchParams.set("post",item?.post_id)
-  //  one_post_url.searchParams.set("post_slug",JSON.stringify(item))
   const {current}=  useLocation()
   const one_post_url = new URL(current)
   one_post_url.pathname="/post/"+item?.post_id
-  one_post_url.searchParams.set("depth", (item?.post_depth + 1).toString());
   one_post_url.searchParams.set("author", item?.creator_id);
-  one_post_url.searchParams.set("depth", (item?.post_depth + 1).toString());
+  one_post_url.searchParams.set("depth", (parseInt(item?.post_depth) + 1).toString());
 
-  
   const profile_url= new URL(current)
   profile_url.pathname="/profile/"+item?.creator_id
   profile_url.searchParams.forEach((value, key) => {
     profile_url.searchParams.delete(key);
   })
   
-  // profile_url.searchParams.set("id", item?.creator_id);
-  // console.log({ item });
 
-  const post_params = ` post_description=${item?.post_body}
-  &post_author=${item?.creator_name}&depth=${item?.post_depth + 1}`;
 
   const card_styles = twMerge(
     `w-full h-full p-1 flex flex-col hover:shadow-sm hover:shadow-accent-foreground
@@ -63,46 +55,42 @@ export const PostsCard = ({
     props.className,
   );
   return (
-
+    <div {...props} className={card_styles}>
       <div
+        className="w-full "
         onClick={(e) => {
           e.stopPropagation();
           navigate(one_post_url.toString());
         }}
-        {...props}
-        className={card_styles}
       >
         <div className="w-full flex flex-col  items-start gap-1 p-2">
-          <Link href={profile_url.toString()}
-            // href={{
-            //   pathname: `/profile/${item?.creator_id}`,
-            //   query: {
-            //     id: item?.creator_id,
-            //   },
-            // }}
-            onClick={(e) => {
-              e.stopPropagation();
-              // push(`/profile/${item?.creator_id}`);
-            }}
-            className="w-fit p-1 flex justify-start items-center gap-[1px]
-                 cursor-pointer hover:bg-base-100 rounded-full"
-          >
-            <div className=" h-8 w-8 md:w-10 md:h-10 ">
-              {item?.creator_image ? (
-                <img
-                  src={item?.creator_image}
-                  alt="creator name"
-                  height={50}
-                  width={50}
-                  // src={makeUrl('devs', item.creator_id, item.creator_image)}
-                  className=" w-full h-full rounded-full aspect-square"
-                />
-              ) : null}
-            </div>
-            <div className="flex items-center text-blue-700 justifycenter text-md font-bold px-2">
-              {item?.creator_name}
-            </div>
-          </Link>
+          <div className="w-full flex justify-between items-center">
+            <Link
+              href={profile_url.toString()}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className="w-fit p-1 flex justify-start items-center gap-[1px]
+            cursor-pointer hover:bg-accent/30 rounded-full"
+            >
+              <div className=" h-8 w-8 md:w-10 md:h-10 ">
+                {item?.creator_image ? (
+                  <img
+                    src={item?.creator_image}
+                    alt="creator name"
+                    height={50}
+                    width={50}
+                    // src={makeUrl('devs', item.creator_id, item.creator_image)}
+                    className=" w-full h-full rounded-full aspect-square"
+                  />
+                ) : null}
+              </div>
+              <div className="flex items-center text-blue-700 justifycenter text-md font-bold px-2">
+                {item?.creator_name}
+              </div>
+            </Link>
+            <div className="w-fit">#{item?.post_depth}</div>
+          </div>
           <TimeCompponent
             className="text-xs font-thin"
             relative={is_reply}
@@ -127,12 +115,11 @@ export const PostsCard = ({
             />
           ) : null}
         </div>
-        <div className="w-full"></div>
-        <div className="w-full  flex p-2">
-          <PostReactionsCard user={user} item={item} pb={pb}/>
-        </div>
       </div>
-
+      <div className="w-full  flex p-2">
+        <PostReactionsCard user={user} item={item} pb={pb} list_item={list_item}/>
+      </div>
+    </div>
   );
 };
 
@@ -140,9 +127,10 @@ interface PostReactionsCardProps {
   pb: PocketBaseClient;
   user?: PocketbookUserResponse;
   item: CustomPocketbookPost;
+  list_item: boolean;
 }
 
-export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => {
+export const PostReactionsCard = ({ pb,user, item,list_item }: PostReactionsCardProps) => {
   const [liked, setLiked] = React.useState(item?.mylike === "yes");
   const newReactionMutation = useMutationWrapper({
     fetcher: createReactionToPost,
@@ -196,25 +184,36 @@ export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => 
           {item?.likes ?? 0}
         </div>
         <div className="flex items-center justify-center gap-1">
-          <PostMutationDialog
-            depth={item?.post_depth + 1}
-            parent={item?.post_id}
-            user={user}
-            label={`replying to ${item?.creator_name}`}
-            icon={
-              <MessageSquare
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                fill={item?.myreply !== "virgin" ? "blue" : ""}
-                className={
-                  item?.myreply !== "virgin"
-                    ? "text-accent-foreground w-5 h-5"
-                    : "w-5 h-5"
-                }
-              />
-            }
-          />
+          {list_item ? (
+            <PostMutationDialog
+              depth={parseInt(item?.post_depth) + 1}
+              parent={item?.post_id}
+              user={user}
+              label={`replying to ${item?.creator_name}`}
+              icon={
+                <MessageSquare
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  fill={item?.myreply !== "virgin" ? "blue" : ""}
+                  className={
+                    item?.myreply !== "virgin"
+                      ? "text-accent-foreground w-5 h-5"
+                      : "w-5 h-5"
+                  }
+                />
+              }
+            />
+          ) : (
+            <MessageSquare
+              fill={item?.myreply !== "virgin" ? "blue" : ""}
+              className={
+                item?.myreply !== "virgin"
+                  ? "text-accent-foreground w-5 h-5"
+                  : "w-5 h-5"
+              }
+            />
+          )}
 
           {item?.replies ?? 0}
         </div>

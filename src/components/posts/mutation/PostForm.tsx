@@ -4,20 +4,16 @@ import { useFormHook } from "../../pocketbook/form/useFormHook";
 import { AsyncButton } from "../../pocketbook/form/components/Button";
 import { ImageInput } from "../../pocketbook/form/components/ImageInput";
 import { FormTextArea } from "../../pocketbook/form/components/FormTextArea";
-import { Close } from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
-
 import { SetStateAction } from "react";
 import {
   createNewPost,
   updatePost,
 } from "@/lib/pb/models/custom_routes/posts";
-
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { ErrorOutput } from "@/components/wrappers/ErrorOutput";
 import { useMutationWrapper } from "@/state/hooks/useMutation";
 import { usePageContext } from "rakkasjs";
-import { CustomPocketbookPost} from "@/lib/pb/models/custom_routes/types";
+import { CustomPocketbookPost, CustomPocketbookRoutesEndpoints} from "@/lib/pb/models/custom_routes/types";
 
 interface PostMutattionFormProps {
   user: PocketbookUserResponse;
@@ -51,12 +47,12 @@ export function PostMutattionForm({
   const mutation = useMutationWrapper({
     fetcher: createNewPost,
     // refresh: true,
-    invalidates: ["custom_pocketbook_posts"],
+    invalidates: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
     success_message: "Post created successfully",
   });
   const update_mutation = useMutationWrapper({
     fetcher: updatePost,
-    invalidates: ["custom_pocketbook_posts"],
+    invalidates: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
     refresh: true,
     success_message: "Post updated successfully",
   });
@@ -120,9 +116,9 @@ export function PostMutattionForm({
           </Close>
         </div> */}
 
-        {/* location */}
-        {/* property location */}
+   
 
+        <span className="w-full">#{depth}</span>
         <FormTextArea
           error={error}
           onChange={handleChange}
