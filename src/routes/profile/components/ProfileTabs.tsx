@@ -2,9 +2,8 @@
 import { SidePanel } from "@/components/posts/timeline/SidePanel";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/shadcn/ui/tabs";
 import { RootTimeline } from "@/components/posts/timeline/RootTimeline";
-import { Followers } from "./friends/followers/Followers";
-import { Following } from "./friends/following/Following";
 import { InfiniteFriends } from "./friends/InfiniteFriends";
+import { navigate, useLocation } from "rakkasjs";
 
 
 interface ProfileTabsProps {
@@ -19,8 +18,21 @@ export function ProfileTabs({
   following_count
 }: ProfileTabsProps) {
 
+  const {current} = useLocation()
+  const url = new URL(current);
+  const tab = url.searchParams.get("tab");
+
+function setTabparam(tab: string) {
+  const url = new URL(current);
+  url.searchParams.set("tab", tab);
+  navigate(url.toString());
+}
   return (
-    <Tabs defaultValue="posts" className="w-[95%] max-h-screen">
+    <Tabs defaultValue={tab ?? "posts"} 
+      onValueChange={(value) => {
+      setTabparam(value);
+    }}
+    className="w-[95%] max-h-screen" >
       <TabsList className="w-[95%] flex sticky top-[6%] z-50 bg-base-200">
         <TabsTrigger value="posts" className="w-full">
           Posts
