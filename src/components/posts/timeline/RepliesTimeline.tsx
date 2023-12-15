@@ -85,6 +85,33 @@ export function RepliesTimeline({
       customPostsQuery.fetchNextPage();
     }
   }, [inView]);
+
+    if (customPostsQuery.isPending) {
+      return (
+        <ScrollArea className="h-full w-[90%] flex flex-col gap-1">
+          <div className="w-full flex flex-col gap-5">
+            {Array.from({ length: 5 }).map((_, index) => {
+              return (
+                <div key={index} className="px-5 flex flex-col  w-full">
+                  <div className="w-full  flex justify-start items-center  gap-1">
+                    <div className="bg-flex h-10 aspect-square rounded-full bg-base-300"></div>
+                    <div className="p-5  flex flex-col  gap-2 w-[40%]">
+                      <div className="w-full h-4 bg-base-300"></div>
+                      <div className="w-full h-4 bg-base-300"></div>
+                    </div>
+                  </div>
+                  <div key={index} className="flex flex-col  w-full gap-1">
+                    <div className="w-full h-[200px] bg-base-300 skeleton"></div>
+                    <div className="w-full h-4 bg-base-300"></div>
+                    <div className="w-full h-4 bg-base-300"></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </ScrollArea>
+      );
+    }
   return (
     <div className="w-full h-full flex flex-col  items-center ">
       {customPostsQuery?.error && (
@@ -95,24 +122,26 @@ export function RepliesTimeline({
       )}
 
       <ScrollArea className="w-[90%] flex flex-col gap-5 ">
-        {data &&
-          data.pages.map((group, i) => (
-            <React.Fragment key={i}>
-              <div className="h-full w-full flex flex-col gap-3 p-3">
-                {/* <SuspenseList revealOrder="forwards" tail="collapsed"> */}
-                {group.data?.result.map((post) => (
-                  <PostsCard
-                    pb={pb}
-                    key={post.post_id}
-                    item={post}
-                    user={user}
-                    is_reply={false}
-                  />
-                ))}
-                {/* </SuspenseList> */}
-              </div>
-            </React.Fragment>
-          ))}
+        <div className="w-full flex flex-col gap-5">
+          {data &&
+            data.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                <div className="h-full w-full flex flex-col gap-3 p-3">
+                  {/* <SuspenseList revealOrder="forwards" tail="collapsed"> */}
+                  {group.data?.result.map((post) => (
+                    <PostsCard
+                      pb={pb}
+                      key={post.post_id}
+                      item={post}
+                      user={user}
+                      is_reply={false}
+                    />
+                  ))}
+                  {/* </SuspenseList> */}
+                </div>
+              </React.Fragment>
+            ))}
+        </div>
         <div className="w-full flex flex-col items-center justify-center my-3">
           {show_load_more && (
             <button

@@ -12,7 +12,7 @@ import {
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PocketBaseClient, getFileURL } from "@/lib/pb/client";
 import { Link, navigate, useLocation } from "rakkasjs";
-import { CustomPocketbookPost } from "@/lib/pb/models/custom_routes/types";
+import { CustomPocketbookPost, CustomPocketbookRoutesEndpoints } from "@/lib/pb/models/custom_routes/types";
 
 interface PostCardProps extends React.HTMLAttributes<HTMLDivElement> {
   pb: PocketBaseClient;
@@ -147,13 +147,13 @@ export const PostReactionsCard = ({ pb,user, item }: PostReactionsCardProps) => 
     fetcher: createReactionToPost,
     // refresh:true,
     success_message: "",
-    invalidates: ["custom_pocketbook_posts"],
+    invalidates: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
   });
   const updateReactionMutation = useMutationWrapper({
     fetcher: updateReactionToPost,
     //   refresh: true,
     success_message: "",
-    invalidates: ["custom_pocketbook_posts"],
+    invalidates: [CustomPocketbookRoutesEndpoints.CustomPocketbookPosts],
     refresh: false,
   });
 
