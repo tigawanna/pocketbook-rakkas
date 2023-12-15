@@ -1,4 +1,4 @@
-import { PageProps } from "rakkasjs";
+import { Head, PageProps } from "rakkasjs";
 import { ProfileUserInfo } from "./components/ProfileUserInfo";
 import { useUser } from "@/lib/rakkas/hooks/useUser";
 import { useQueries, useQuery } from "@tanstack/react-query";
@@ -48,6 +48,11 @@ export default function OneProfilePage({params}: PageProps) {
   return (
     <div className="flex flex-col items-center  h-[99vh]  gap-3 overflow-y-scroll p-2 ml-5 
     overflow-x-clip">
+      <Head  
+      title={profile_user?.username??"profile"}
+      description={profile_user?.bio??"Pocketbook profile"}
+      og:image={profile_user?.avatar??""}
+      />
       <div className="w-[95%]  flex gap-2 items-center sticky top-0 z-50 ">
         {/* <Link href="-1"> */}
         <ChevronLeft
@@ -57,7 +62,7 @@ export default function OneProfilePage({params}: PageProps) {
         />
         {/* </Link> */}
         <h1 className="text-3xl font-bold">Profile</h1>
-      </div>
+      H</div>
    
    {(profile_query.isPending) ? 
    <ProfileInfoLoader/>

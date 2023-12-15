@@ -37,14 +37,15 @@ export default function OnePostPage({ params, url }: PageProps) {
 
   return (
     <main className="flex items-center justify-center h-[99vh] w-full  gap-3 overflow-y-scroll ">
+
       <div className="w-full h-full flex flex-col items-center justify-start gap-2 p-2 ">
         <div className="w-full  flex gap-2 items-center sticky top-0  ">
           {/* <Link href="-1"> */}
-            <ChevronLeft
-            onClick={()=>history?.back()}
-              className="h-7 w-7 hover:text-accent-foreground"
-              size={10}
-            />
+          <ChevronLeft
+            onClick={() => history?.back()}
+            className="h-7 w-7 hover:text-accent-foreground"
+            size={10}
+          />
           {/* </Link> */}
           <h1 className="text-3xl font-bold">Post</h1>
         </div>
@@ -62,7 +63,11 @@ export default function OnePostPage({ params, url }: PageProps) {
         </div>
 
         {one_post && (
-          <RepliesTimeline depth={parseInt(depth)} parent={one_post?.post_id} key={depth}/>
+          <RepliesTimeline
+            depth={parseInt(depth)}
+            parent={one_post?.post_id}
+            key={depth}
+          />
         )}
       </div>
 

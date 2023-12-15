@@ -11,7 +11,7 @@ import {
 } from "@/lib/pb/models/custom_routes/posts"
 import { PocketbookUserResponse } from "@/lib/pb/db-types";
 import { PocketBaseClient, getFileURL } from "@/lib/pb/client";
-import { Link, navigate, useLocation } from "rakkasjs";
+import { Head, Link, navigate, useLocation } from "rakkasjs";
 import { CustomPocketbookPost, CustomPocketbookRoutesEndpoints } from "@/lib/pb/models/custom_routes/types";
 
 interface PostCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -56,6 +56,11 @@ export const PostsCard = ({
   );
   return (
     <div {...props} className={card_styles}>
+   {!list_item&&<Head
+        title={"Post"}
+        description={item?.post_body?.slice(0, 100) ?? ""}
+        og:image={post_img_url ?? ""}
+      />}
       <div
         className="w-full "
         onClick={(e) => {
@@ -117,7 +122,12 @@ export const PostsCard = ({
         </div>
       </div>
       <div className="w-full  flex p-2">
-        <PostReactionsCard user={user} item={item} pb={pb} list_item={list_item}/>
+        <PostReactionsCard
+          user={user}
+          item={item}
+          pb={pb}
+          list_item={list_item}
+        />
       </div>
     </div>
   );
