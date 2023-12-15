@@ -8,7 +8,7 @@ interface IUseFormError {
   message: string;
 }
 
-export function useFormHook<T>({ initialValues }: IUseFormHook<T>) {
+export function useFormHookers<T>({ initialValues }: IUseFormHook<T>) {
   const [input, setInput] = useState(initialValues);
   const [error, setError] = useState<IUseFormError>({ message: "", name: "" });
 

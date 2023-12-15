@@ -1,7 +1,7 @@
 // import useSWRMutation from "swr/mutation";
 
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+
 
 interface IUseMutation<V, R> {
   fetcher: (vars: V) => Promise<R>;
