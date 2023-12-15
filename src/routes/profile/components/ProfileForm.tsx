@@ -67,7 +67,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
       <ScrollArea className="w-full h-[80vh]">
         <form
           onSubmit={onSubmit}
-          className="w-full h-full flex flex-col items-center justify-center gap-3 text-sm"
+          className="w-full h-full flex flex-col items-center justify-center gap-3 "
         >
           <h1 className="text-2xl font-bold">Update Profile</h1>
           {error.message !== "" && <ErrorOutput error={error} />}
@@ -84,11 +84,12 @@ export function ProfileForm({ user }: ProfileFormProps) {
               </div>
             )}
 
-            <div className="flex flex-col md:flex-row gap-1">
+            <div className="flex flex-col md:flex-row gap-1 w-full">
               <PBTheTextInput<PocketbookUserResponse>
                 field_key={"avatar"}
                 field_name="Image Url"
-                label_classname="min-w-fit text-sm text-accent capitalize"
+                type="url"
+                label_classname="w-full text-sm text-accent capitalize"
                 required
                 onChange={handleChange}
                 val={input.avatar}
@@ -153,7 +154,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               label_classname="min-w-fit text-sm text-accent capitalize"
               required
               onChange={handleChange}
-              value={input.github_login}
+              value={input.bio}
               validation_error={error}
               pb_error={data?.error}
             />

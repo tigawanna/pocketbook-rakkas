@@ -36,7 +36,7 @@ export function ProfileUserInfo({
 
   return (
     <div
-      className="w-full flex flex-col md:flex-row items-center justify-center bg-base-300 p-3 gap-2 
+      className="w-full flex flex-col md:flex-row items-center justify-center bg-base-200 p-3 gap-2 
           "
     >
       <div className="md:w-[35%] w-[90%] p-2 h-full flex items-center justify-center rounded-2xl">
